@@ -792,6 +792,7 @@ words1 = ["ab","ba","ab","ba","ab","ba","ab","ba","ab","ba","ab","ba","ab","ba",
 # words1 = ["bdac","dddd"]
 
 
+# 心态崩了 超时
 class Solution(object):
     def findOnce(self, s, word, num_words, len_words):
         words = word[:]
@@ -829,10 +830,9 @@ class Solution(object):
             return []
         len_words = len(words[0])
 
-        # TODO: 递归
         i = 0
         while i <= length - num_words*len_words:
-            tmp = self.findOnce(s[i:(i + num_words * len_words)], words, num_words, len_words)
+            tmp = self.findOnce(s[i:(i + num_words*len_words)], words, num_words, len_words)
             if tmp == -1:
                 res.append(i)
                 i += 1
@@ -840,51 +840,6 @@ class Solution(object):
                 i += tmp
         return res
 
-
-# # 这个按等差数列判断的方法有bug,当words中有重复关键字时需要打补丁
-# class Solution(object):
-#     def findOnce(self, s, num_words, len_words):
-#         tmp = [-2]*num_words
-#         for i in range(num_words):
-#             tt = s.find(words[i])
-#             while tt in tmp:
-#                 tt = s.find(words[i], tt+len_words)
-#
-#             tmp[i] = tt
-#         # 这里不需要sort,找min就够了
-#         # tmp.sort()
-#         tmp_min = min(tmp)
-#         if tmp_min == -1:
-#             return -2, 0
-#         if sum(tmp) == num_words*tmp_min + num_words*(num_words-1)*len_words/2:
-#             res = tmp_min
-#         else:
-#             return -1, tmp_min
-#         return 1, res
-#
-#     def findSubstring(self, s, words):
-#         """
-#         :type s: str
-#         :type words: List[str]
-#         :rtype: List[int]
-#         """
-#         res = []
-#         num_words = len(words)
-#         if num_words == 0:
-#             return []
-#         len_words = len(words[0])
-#
-#         # TODO: 递归
-#         i = 0
-#         while len(s[i:]) >= num_words*len_words:
-#             flag, tmp_i = self.findOnce(s[i:], num_words, len_words)
-#             i += tmp_i
-#             if flag == -2:
-#                 break
-#             elif flag >= 0:
-#                 res.append(i)
-#             i += 1
-#         return res
 
 # class Solution(object):
 #     def findSubstring(self, s, words):
@@ -899,6 +854,7 @@ class Solution(object):
 #         k = len(words[0])
 #         t = len(words) * k
 #         req = {}
+#         # 统计每个word重复出现了多少次
 #         for w in words:
 #             req[w] = req[w] + 1 if w in req else 1
 #         ans = []
@@ -906,6 +862,7 @@ class Solution(object):
 #         for i in range(min(k, n - t + 1)):
 #             self._findSubstring(i, i, n, k, t, s, req, ans)
 #         return ans
+#
 #
 #     def _findSubstring(self, l, r, n, k, t, s, req, ans):
 #         curr = {}
@@ -922,6 +879,43 @@ class Solution(object):
 #                     l += k
 #                 if r - l == t:
 #                     ans.append(l)
+
+# 暴力法
+class Solution(object):
+    def findSubstring(self, s, words):
+        """
+        :type s: str
+        :type words: List[str]
+        :rtype: List[int]
+        """
+        if not words:
+            return []
+        ans = []
+        worddic = {}
+        lenword = len(words[0])
+        totalwords = len(words)
+        for word in words:
+            if word in worddic:
+                worddic[word] += 1
+            else:
+                worddic[word] = 1
+        for i in range(len(s) - lenword * totalwords + 1):
+            count = 0
+            j = i
+            worddic_copy = worddic.copy()
+            while count < totalwords:
+                curslide = s[j:j + lenword]
+                cs = curslide
+                if cs in worddic_copy and worddic_copy[cs] != 0:
+                    j += lenword
+                    worddic_copy[cs] -= 1
+                    count += 1
+                else:
+                    break
+            if count == totalwords:
+                ans.append(i)
+
+        return ans
 
 
 solve = Solution()
