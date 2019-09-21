@@ -1051,8 +1051,8 @@ class Solution(object):
         if target == 0:
             res.append(path)
             return
-        for i in xrange(start,len(nums)):
-            if i>start and nums[i] == nums[i-1]:
+        for i in range(start,len(nums)):
+            if i > start and nums[i] == nums[i-1]:
                 continue
             if nums[i]>target:
                 break
