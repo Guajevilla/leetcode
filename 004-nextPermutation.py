@@ -969,39 +969,94 @@ candidates1 = [2,5,2,1,2]       # [[1,2,2], [5]]
 target1 = 5
 
 
-# 做法和前一题一样...跳过重复元素就行了
+# # 做法和前一题一样...跳过重复元素就行了
+# class Solution(object):
+#     def addElement(self, num, lis):
+#         for l in lis:
+#             l.insert(0, num)
+#
+#         return lis
+#
+#     def combinationSum2(self, candidates, target):
+#         """
+#         :type candidates: List[int]
+#         :type target: int
+#         :rtype: List[List[int]]
+#         """
+#         candidates.sort()
+#
+#         def findTarget(candidates, target):
+#             ans = []
+#             for ind, num in enumerate(candidates):
+#                 if ind > 0:
+#                     if num == candidates[ind-1]:
+#                         continue
+#                 if num < target:
+#                     tmp = findTarget(candidates[ind+1:], target - num)
+#                     if tmp:
+#                         ans.extend(self.addElement(num, tmp))
+#                 elif num == target:
+#                     ans.append([num])
+#                 else:
+#                     break
+#             return ans
+#
+#         return findTarget(candidates, target)
+
+
+# 剪枝后dfs
+def dfs(candidates, begin, res, path, target):
+    if target == 0:
+        res.append(path[:])
+        return
+    for index in range(begin, len(candidates)):
+        rest = target - candidates[index]
+        if rest < 0:
+            break
+        if index > begin and candidates[index - 1] == candidates[index]:
+            continue
+
+        path.append(candidates[index])
+        dfs(candidates, index + 1, res, path, rest)
+        path.pop()
+
+
 class Solution(object):
-    def addElement(self, num, lis):
-        for l in lis:
-            l.insert(0, num)
-
-        return lis
-
     def combinationSum2(self, candidates, target):
         """
         :type candidates: List[int]
         :type target: int
         :rtype: List[List[int]]
         """
+        candidates = sorted(candidates)
+        res = []
+        path = []
+        dfs(candidates, 0, res, path, target)
+        return res
+
+
+# 还是回溯法
+class Solution(object):
+    def combinationSum2(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        res=[]
         candidates.sort()
-
-        def findTarget(candidates, target):
-            ans = []
-            for ind, num in enumerate(candidates):
-                if ind > 0:
-                    if num == candidates[ind-1]:
-                        continue
-                if num < target:
-                    tmp = findTarget(candidates[ind+1:], target - num)
-                    if tmp:
-                        ans.extend(self.addElement(num, tmp))
-                elif num == target:
-                    ans.append([num])
-                else:
-                    break
-            return ans
-
-        return findTarget(candidates, target)
+        self.backtracking(candidates,0,target,[],res)
+        return res
+    def backtracking(self,nums,start,target,path,res):
+        if target == 0:
+            res.append(path)
+            return
+        for i in xrange(start,len(nums)):
+            if i>start and nums[i] == nums[i-1]:
+                continue
+            if nums[i]>target:
+                break
+            self.backtracking(nums,i+1,target-nums[i],[nums[i]]+path,res)
 
 
 solve = Solution()
