@@ -412,7 +412,7 @@ class Solution(object):
                     dp[i+1][j+1] = dp[i][j]
                 elif p[i] == '*' and (dp[i+1][j] or dp[i][j+1]):
                     dp[i+1][j+1] = True
-        print(dp)
+        # print(dp)
         return dp[-1][-1]
 
 
