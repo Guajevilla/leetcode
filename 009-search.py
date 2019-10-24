@@ -260,14 +260,13 @@ class Solution(object):
         :rtype: int
         """
         stack = []
-        heights = heights + [0]
+        heights = [0] + heights + [0]
         res = 0
-        for i in range(len(heights)):
-            #print(stack)
-            while stack and heights[stack[-1]] > heights[i]:
-                tmp = stack.pop()
-                res = max(res, (i - stack[-1] - 1) * heights[tmp])
+        for i, ele in enumerate(heights):
+            while len(stack) > 0 and heights[stack[-1]] > ele:
+                res = max(res, heights[stack.pop(-1)] * (i - stack[-1] - 1))
             stack.append(i)
+
         return res
 
 
