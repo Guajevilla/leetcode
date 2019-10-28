@@ -334,6 +334,96 @@ solve = Solution()
 print(solve.largestRectangleArea(x))
 
 # ############################### 85. 最大矩形 ###############################
+x = [
+  ["1","0","1","0","0"],
+  ["1","0","1","1","1"],
+  ["1","1","1","1","1"],
+  ["1","0","0","1","0"]
+]   # 6
+
+# x = [
+#   ["1","0","1","0","0"],
+#   ["1","0","1","1","1"],
+#   ["1","1","1","1","1"],
+#   ["0","0","0","0","0"]
+# ]   # 6
+x = [["1"], ["1"]]
+x = [["1","1","1","1"],["1","1","1","1"],["1","1","1","1"]]
+
+
+class Solution(object):
+    def maximalRectangle(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        if not matrix:
+            return 0
+        mat_lis = [[0]*len(matrix[0]) for _ in range(len(matrix))]
+        area_lis = [[0]*len(matrix[0]) for _ in range(len(matrix))]
+        for i, lis in enumerate(matrix):
+            tmp = 0
+            for j, ele in enumerate(lis):
+                if ele == '0':
+                    mat_lis[i][j] = 0
+                    tmp = 0
+                else:
+                    tmp += 1
+                    mat_lis[i][j] = tmp
+
+        print(mat_lis)
+        area_lis[0] = mat_lis[0]
+        res = max(mat_lis[0])
+        for i in range(1, len(matrix)):
+            for j in range(len(matrix[0])):
+                if mat_lis[i][j] != 0:
+                    if i - 1 >= 0:
+                        area_lis[i][j] = max(mat_lis[i][j], 2*min(mat_lis[i-1][j], mat_lis[i][j]))
+                        if area_lis[i][j] > res:
+                            res = area_lis[i][j]
+                        continue
+                area_lis[i][j] = mat_lis[i][j]
+        print(area_lis)
+
+        return res
+
+
+        # res = 0
+        # dic = {}    # 存1
+        # length = []
+        # for i, lis in enumerate(matrix):
+        #     dic[i] = []
+        #     tmp = 1
+        #     for j, ele in enumerate(lis):
+        #         if ele == "1":
+        #             if len(dic[i]) > 0 and dic[i][-1] == j - 1:
+        #                 tmp += 1
+        #             else:
+        #                 tmp = 1
+        #             dic[i].append(j)
+        #     if len(dic[i]) == 0:
+        #         tmp = 0
+        #     length.append(tmp)
+        # print(dic)
+        # print(length)
+        # for i in range(len(dic)):
+        #     j = 0
+        #     while j < len(dic[i]):
+        #         # if len(dic[i]) > j+1 and dic[i][j] == dic[i][j+1] - 1 and length[i] > 1:
+        #         #     print(dic[i][j:j+length[i]])
+        #         #     j += length[i]
+        #         # elif length[i] == 1:
+        #         #     print(dic[i][j])
+        #         #     j += 1
+        #         # else:
+        #         #     j += 1
+        #
+        # return res
+
+
+solve = Solution()
+print(solve.maximalRectangle(x))
+
 # ############################### 86. 分隔链表 ###############################
 #
 #
@@ -465,3 +555,61 @@ class Solution(object):
 
 solve = Solution()
 print(solve.isScramble(s1, s2))
+
+# ############################### 88. 合并两个有序数组 ###############################
+# nums1 = [1,2,7,0,0,0]
+# m = 3
+# nums2 = [2,5,6]
+# n = 3               # [1,2,2,3,5,6]
+
+# nums1 = [0]
+# n = 0               # [1,2,2,3,5,6]
+# nums2 = [1]
+# m = 1
+
+# # nums1 = [-1,0,0,3,3,3,0,0,0]
+# # m = 6
+# # nums2 = [1,2,2]
+# # n = 3
+
+
+# class Solution(object):
+#     def merge(self, nums1, m, nums2, n):
+#         """
+#         :type nums1: List[int]
+#         :type m: int
+#         :type nums2: List[int]
+#         :type n: int
+#         :rtype: None Do not return anything, modify nums1 in-place instead.
+#         """
+#         # i = 0
+#         # j = 0
+#         # if not nums2:
+#         #     return
+#         # while i < m+n and j < n:
+#         #     if nums2[j] < nums1[i]:
+#         #         nums1[i:] = [nums2[j]] + nums1[i:-1]
+#         #         j += 1
+#         #     i += 1
+#         # if j < n:
+#         #     nums1[-(n-j):] = nums2[j:]
+
+#         # 从后往前
+#         i = m - 1
+#         j = n - 1
+#         p = m + n - 1
+#         while i >= 0 and j >= 0:
+#             if nums2[j] >= nums1[i]:
+#                 nums1[p] = nums2[j]
+#                 j -= 1
+#             else:
+#                 nums1[p] = nums1[i]
+#                 i -= 1
+#             p -= 1
+#         nums1[:j + 1] = nums2[:j + 1]
+
+
+# solve = Solution()
+# solve.merge(nums1, m, nums2, n)
+# print(nums1)
+
