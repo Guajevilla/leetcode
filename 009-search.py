@@ -691,7 +691,6 @@ nums = [1,2,2]
 # nums = [1]
 
 
-
 class Solution(object):
     def subsetsWithDup(self, nums):
         """
