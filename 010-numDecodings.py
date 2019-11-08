@@ -1,4 +1,6 @@
 import copy
+import functools
+import time
 # ############################### 91. 解码方法 ###############################
 # nums = "12"         # 2
 # nums = "226"        # 3
@@ -487,7 +489,8 @@ def stringToTreeNode(input):
             nodeQueue.append(node.right)
     return root
 
-x = 3
+
+x = 0
 # [
 #   [1,null,3,2],
 #   [3,2,null,1],
@@ -503,20 +506,27 @@ class Solution(object):
         :type n: int
         :rtype: List[TreeNode]
         """
-        if n < 1:
-            return []
-        res = []
+        # 两边可以取到
+        @functools.lru_cache(None)
+        def generate_subtree(head, tail):
+            if head > tail:
+                return [None]
+            elif head == tail:
+                return [TreeNode(head)]
+            res = []
+            for ele in range(head, tail + 1):
+                for left in generate_subtree(head, ele - 1):
+                    for right in generate_subtree(ele + 1, tail):
+                        root = TreeNode(ele)
+                        root.left = left
+                        root.right = right
+                        res.append(root)
 
-        def backtrack(i):
-            root = TreeNode(i)
-            res.append(root)
-            for j in range(1, i):
-                p = TreeNode(j)
-                backtrack(j)
+            return res
 
-        for i in range(1, n+1):
-            backtrack(i)
-        return res
+        tmp = generate_subtree(1, n)
+        return tmp
+
 
         # def generate_trees(start, end):
         #     if start > end:
@@ -545,8 +555,8 @@ class Solution(object):
 
 solve = Solution()
 roots = solve.generateTrees(x)
-# for root in roots:
-#     print(treeNodeToString(root))
+for root in roots:
+    print(treeNodeToString(root))
 
 # ############################### 96. 不同的二叉搜索树 ###############################
 #
