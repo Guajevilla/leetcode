@@ -461,59 +461,82 @@ print(treeNodeToString(root))
 # 与上一题差别在于不是“完美二叉树”,这题用上一题的非常数空间复杂度解法，不用改任何地方就能过，但还是空间复杂度不符合要求
 
 
-class Solution(object):
-    def connect(self, root):
-        """
-        :type root: Node
-        :rtype: Node
-        """
-
+# class Solution(object):
+#     def connect(self, root):
+#         """
+#         :type root: Node
+#         :rtype: Node
+#         """
+#         cur = root
+#         head = None
+#         tail = None
+#         while cur:
+#             while cur:
+#                 if cur.left:
+#                     if not head:
+#                         head = cur.left
+#                         tail = cur.left
+#                     else:
+#                         tail.next = cur.left
+#                         tail = tail.next
+#                 if cur.right:
+#                     if not head:
+#                         head = cur.right
+#                         tail = cur.right
+#                     else:
+#                         tail.next = cur.right
+#                         tail = tail.next
+#                 cur = cur.next
+#             cur = head
+#             head = None
+#             tail = None
+#         return root
 
 
 # ############################### 118. 杨辉三角 ###############################
-x = 1
-# [
-#      [1],
-#     [1,1],
-#    [1,2,1],
-#   [1,3,3,1],
-#  [1,4,6,4,1]
-# ]
+# x = 5
+# # [
+# #      [1],
+# #     [1,1],
+# #    [1,2,1],
+# #   [1,3,3,1],
+# #  [1,4,6,4,1]
+# # ]
+#
+#
+# class Solution(object):
+#     def generate(self, numRows):
+#         """
+#         :type numRows: int
+#         :rtype: List[List[int]]
+#         """
+#         # if numRows < 1:
+#         #     return []
+#         # res = [[1]]
+#         # while numRows > 1:
+#         #     numRows -= 1
+#         #     tmp1 = res[-1] + [0]
+#         #     tmp2 = [0] + res[-1]
+#         #     for i in range(len(tmp1)):
+#         #         tmp1[i] += tmp2[i]
+#         #     res.append(tmp1)
+#         # return res
+#
+#         # 模拟过程
+#         res = []
+#         tmp = []
+#         for _ in range(numRows):
+#             tmp.insert(0, 1)
+#             for i in range(1, len(tmp) - 1):
+#                 tmp[i] = tmp[i] + tmp[i + 1]
+#             res.append(tmp[:])
+#         return res
+#
+#
+# solve = Solution()
+# print(solve.generate(x))
 
-
-class Solution(object):
-    def generate(self, numRows):
-        """
-        :type numRows: int
-        :rtype: List[List[int]]
-        """
-        # if numRows < 1:
-        #     return []
-        # res = [[1]]
-        # while numRows > 1:
-        #     numRows -= 1
-        #     tmp1 = res[-1] + [0]
-        #     tmp2 = [0] + res[-1]
-        #     for i in range(len(tmp1)):
-        #         tmp1[i] += tmp2[i]
-        #     res.append(tmp1)
-        # return res
-
-        # 模拟过程
-        res = []
-        tmp = []
-        for _ in range(numRows):
-            tmp.insert(0, 1)
-            for i in range(1, len(tmp) - 1):
-                tmp[i] = tmp[i] + tmp[i + 1]
-            res.append(tmp[:])
-        return res
-
-
-solve = Solution()
-print(solve.generate(x))
-
-# ############################### 118. 杨辉三角 ###############################
+# ############################### 119. 杨辉三角 II ###############################
 # x = 1       # [1,3,3,1]
 #
 #
@@ -543,3 +566,55 @@ print(solve.generate(x))
 #
 # solve = Solution()
 # print(solve.getRow(x))
+
+# ############################### 120. 三角形最小路径和 ###############################
+# 只使用 O(n) 的额外空间（n 为三角形的总行数）
+x = [
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]               # 11
+
+x = [
+     [2],
+    [3,4],
+   [6,5,1],
+  [4,1,8,3]
+]               # 10
+
+# x = []               # 10
+
+
+class Solution(object):
+    def minimumTotal(self, triangle):
+        """
+        :type triangle: List[List[int]]
+        :rtype: int
+        """
+        # # 为了节省空间改变了原数据
+        # if not triangle or not triangle[0]:
+        #     return 0
+        # for i in range(1, len(triangle)):
+        #     for j in range(len(triangle[i])):
+        #         if j == 0:
+        #             triangle[i][j] += triangle[i - 1][j]
+        #         elif j == len(triangle[i]) - 1:
+        #             triangle[i][j] += triangle[i - 1][-1]
+        #         else:
+        #             triangle[i][j] += min(triangle[i - 1][j], triangle[i - 1][j - 1])
+        #
+        # return min(triangle[-1])
+
+        # 只存一个dp = triangle[-1]从下向上比,dp的有效位数逐渐减小到1,最后返回dp[0]
+        row = len(triangle)
+        dp = triangle[-1]
+        for i in range(row-2, -1, -1):
+            for j in range(i + 1):
+                dp[j] = min(dp[j], dp[j+1])+triangle[i][j]
+        return dp[0]
+
+
+solve = Solution()
+print(solve.minimumTotal(x))
+print(x)
