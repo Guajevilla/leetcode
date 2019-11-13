@@ -55,60 +55,67 @@
 
 # ############################### 123. 买卖股票的最佳时机 III ###############################
 x = [3,3,5,0,0,3,1,4]       # 6
-x = [1,2,3,4,5]         # 4
-x = [7,6,4,3,1]       # 0
+# x = [1,2,3,4,5]         # 4
+# x = [7,6,4,3,1]       # 0
 x = [1,2,4,2,5,7,2,4,9,0]   # 13
+# x = [1,2]
+# x = [1,4,2]
 
 
 class Solution(object):
-    def insert_profit(self, profit, tmp_profit):
-        if not profit:
-            profit.append(tmp_profit)
-        elif len(profit) == 1:
-            if tmp_profit > profit[0]:
-                profit.append(tmp_profit)
-            else:
-                profit.insert(0, tmp_profit)
-        else:
-            if tmp_profit > profit[0]:
-                profit.pop(0)
-                if tmp_profit > profit[0]:
-                    profit.append(tmp_profit)
-                else:
-                    profit.insert(0, tmp_profit)
-
     def maxProfit(self, prices):
         """
         :type prices: List[int]
         :rtype: int
         """
-        profit = []
-        tmp_profit = 0
-        for i in range(1, len(prices)):
-            tmp = prices[i] - prices[i - 1]
-            if tmp > 0:
-                tmp_profit += tmp
-            else:
-                self.insert_profit(profit, tmp_profit)
-                tmp_profit = 0
+        # # 最后一个用例超时...
+        # if not prices:
+        #     return 0
+        # profit = 0
+        # min_prices = prices[0]
+        # max_i = 0
+        # for i, cur_price in enumerate(prices[1:]):
+        #     # 第i+1天卖出的最大利润
+        #     if cur_price < min_prices:
+        #         min_prices = cur_price
+        #         continue
+        #     else:
+        #         max_i = max(cur_price - min_prices, max_i)
+        #     # max_i = 0
+        #     # for pre in prices[:i+1]:
+        #     #     max_i = max(max_i, cur_price - pre)
+        #     # 后面的这几天找最大,利用121的解法
+        #     min_p, max_p = float('inf'), 0
+        #     for after_price in prices[i + 2:]:
+        #         min_p = min(min_p, after_price)
+        #         max_p = max(max_p, after_price - min_p)
+        #     profit = max(max_p + max_i, profit)
+        #
+        # return profit
 
-        if tmp_profit > 0:
-            self.insert_profit(profit, tmp_profit)
 
-        print(profit)
-        return sum(profit)
+        # if not prices:
+        #     return 0
+        # K = 2
+        # dp = [[0] * (K + 1) for i in range(len(prices))]
+        # for k in range(1, K + 1):
+        #     min_price = prices[0]
+        #     for i in range(1, len(prices)):
+        #         min_price = min(prices[i] - dp[i][k - 1], min_price)
+        #         dp[i][k] = max(prices[i] - min_price, dp[i - 1][k])
+        #
+        # return dp[-1][-1]
 
-    # def maxProfit(self, prices):
-    #     if not prices: return 0
-    #     n = len(prices)
-    #     dp = [[0] * n for _ in range(3)]
-    #     for k in range(1, 3):
-    #         pre_max = -prices[0]
-    #         for i in range(1, n):
-    #             pre_max = max(pre_max, dp[k - 1][i - 1] - prices[i])
-    #             dp[k][i] = max(dp[k][i - 1], prices[i] + pre_max)
-    #     return dp[-1][-1]
+        if len(prices) == 0:
+            return 0
+        fstBuy, fstSell, secBuy, secSell = prices[0], 0, prices[0], 0
 
+        for i in range(len(prices)):
+            fstBuy = min(fstBuy, prices[i])
+            fstSell = max(fstSell, prices[i] - fstBuy)
+            secBuy = min(secBuy, prices[i] - fstSell)
+            secSell = max(secSell, prices[i] - secBuy)
+        return secSell
 
 
 solve = Solution()
@@ -336,20 +343,214 @@ def stringToTreeNode(input):
 # print(solve.maxPathSum(x))
 
 # ############################### 125. 验证回文串 ###############################
-x = "A man, a plan, a canal: Panama"    # T
-x = "race a car"                        # F
-x = "1"
+# x = "A man, a plan, a canal: Panama"    # T
+# # x = "race a car"                        # F
+# # x = "11"
+# # x = ".,"
+#
+#
+# class Solution(object):
+#     def isPalindrome(self, s):
+#         """
+#         :type s: str
+#         :rtype: bool
+#         """
+#         # 正则表达式
+#         import re
+#         tmp = re.sub(r"[^A-Za-z0-9]","", s).lower()
+#         return tmp == tmp[::-1]
+#
+#
+#         # s = s.lower()
+#         # if len(s) == 0 or len(s) == 1:
+#         #     return True
+#         # head = 0
+#         # tail = len(s) - 1
+#         # while head <= tail:
+#         #     while head <= tail and not (s[head].isdigit() or s[head].isalpha()):    # .isalnum()
+#         #         head += 1
+#         #     if head >= tail:
+#         #         return True
+#         #     while head <= tail and not (s[tail].isdigit() or s[tail].isalpha()):
+#         #         tail -= 1
+#         #     if head >= tail:
+#         #         return True
+#         #     if s[head] != s[tail]:
+#         #         return False
+#         #     else:
+#         #         head += 1
+#         #         tail -= 1
+#         # return True
+#
+#
+# solve = Solution()
+# print(solve.isPalindrome(x))
+
+# ############################### 126. 单词接龙 II ###############################
+# 每次转换只能改变一个字母。
+# 所有单词具有相同的长度。
+# 所有单词只由小写字母组成。
+# 字典中不存在重复的单词。
+# 你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log","cog"]
+# [
+#   ["hit","hot","dot","dog","cog"],
+#   ["hit","hot","lot","log","cog"]
+# ]
+
+# beginWord = "hit"
+# endWord = "cog"
+# wordList = ["hot","dot","dog","lot","log"]
+# # []
 
 
 class Solution(object):
-    def isPalindrome(self, s):
+    def find_similarity(self, word1, word2):
+        cnt = 0
+        for i in range(len(word1)):
+            if word1[i] == word2[i]:
+                cnt += 1
+        return cnt
+
+    def findLadders(self, beginWord, endWord, wordList):
         """
-        :type s: str
-        :rtype: bool
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: List[str]
+        :rtype: List[List[str]]
         """
-        if len(s) == 0 or 1:# len(s) == 1:
-            return True
+        newList = [[beginWord], [endWord]]
+        n = len(beginWord)
+        length = n - self.find_similarity(beginWord, endWord)
+        begin_list = [[beginWord]]
+        begin_list.extend([] for _ in range(length))
+        end_list = [[] for _ in range(length)]
+        end_list.insert(0, [beginWord])
+        for word in wordList:
+            begin_similarity = self.find_similarity(word, beginWord)
+            end_similarity = self.find_similarity(word, endWord)
+            begin_list[n - begin_similarity].append(word)
+            end_list[end_similarity].append(word)
+            # if begin_similarity + end_similarity == n:
+            #     return
+        print(begin_list)
+        print(end_list)
 
 
 solve = Solution()
-print(solve.isPalindrome(x))
+print(solve.findLadders(beginWord, endWord, wordList))
+
+# ############################### 127. 单词接龙 ###############################
+beginWord = "hit",
+endWord = "cog",
+wordList = ["hot","dot","dog","lot","log","cog"]
+# 5
+
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log"]
+# 0
+
+
+class Solution(object):
+    def find_one_difference(self):
+        return
+
+    def ladderLength(self, beginWord, endWord, wordList):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: List[str]
+        :rtype: int
+        """
+
+
+# solve = Solution()
+# print(solve.ladderLength(beginWord, endWord, wordList))
+
+# ############################### 128. 最长连续序列 ###############################
+nums = [100, 4, 200, 1, 3, 2]       # 4
+
+
+class Solution(object):
+    def longestConsecutive(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+
+
+# solve = Solution()
+# print(solve.longestConsecutive(nums))
+
+# ############################### 129. 求根到叶子节点数字之和 ###############################
+# x = stringToTreeNode('[1,2,3]')      # 25
+# x = stringToTreeNode('[4,9,0,5,1]')  # 1026
+# x = stringToTreeNode('[1]')      # 25
+#
+#
+# class Solution(object):
+#     def sumNumbers(self, root):
+#         """
+#         :type root: TreeNode
+#         :rtype: int
+#         """
+#         res = [0]
+#
+#         def pre_order(root, s):
+#             if not root:
+#                 return
+#             s = 10*s + root.val
+#             if not (root.left or root.right):
+#                 res[0] += s
+#
+#             pre_order(root.left, s)
+#             pre_order(root.right, s)
+#
+#         if not root:
+#             return 0
+#         pre_order(root, 0)
+#         print(res)
+#         return res[0]
+#
+#
+# solve = Solution()
+# print(solve.sumNumbers(x))
+
+# ############################### 130. 被围绕的区域 ###############################
+board = [['X','X','X','X'],
+         ['X','O','O','X'],
+         ['X','X','O','X'],
+         ['X','O','X','X']]
+# [['X X X X'],
+#  ['X X X X'],
+#  ['X X X X'],
+#  ['X O X X']]
+
+
+class Solution(object):
+    def solve(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: None Do not return anything, modify board in-place instead.
+        """
+        dp = [[1] * len(board[0]) for _ in range(len(board))]
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if i == 0 or j == 0 or i == len(board) - 1 or j == len(board[0]) - 1:
+                    dp[i][j] = board[i][j] == 'X'
+                else:
+                    if board[i][j] == 'X':
+                        dp[i][j] = 1
+                    else:
+                        if dp[i - 1][j] and dp[i][j - 1]:
+                            dp[i][j] = 2
+                        else:
+                            dp[i][j] = 0
+
+
+# solve = Solution()
+# solve.solve(board)
+# print(board)
