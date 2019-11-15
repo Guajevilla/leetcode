@@ -386,92 +386,201 @@ def stringToTreeNode(input):
 # solve = Solution()
 # print(solve.isPalindrome(x))
 
-# ############################### 126. 单词接龙 II ###############################
-# 每次转换只能改变一个字母。
-# 所有单词具有相同的长度。
-# 所有单词只由小写字母组成。
-# 字典中不存在重复的单词。
-# 你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
-beginWord = "hit"
-endWord = "cog"
-wordList = ["hot","dot","dog","lot","log","cog"]
-# [
-#   ["hit","hot","dot","dog","cog"],
-#   ["hit","hot","lot","log","cog"]
-# ]
-
+# # ############################### 126. 单词接龙 II ###############################
+# # 每次转换只能改变一个字母。
+# # 所有单词具有相同的长度。
+# # 所有单词只由小写字母组成。
+# # 字典中不存在重复的单词。
+# # 你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+# beginWord = "hit"
+# endWord = "cog"
+# wordList = ["hot","dot","dog","lot","log","cog"]
+# # [
+# #   ["hit","hot","dot","dog","cog"],
+# #   ["hit","hot","lot","log","cog"]
+# # ]
+#
 # beginWord = "hit"
 # endWord = "cog"
 # wordList = ["hot","dot","dog","lot","log"]
 # # []
-
-
-class Solution(object):
-    def find_similarity(self, word1, word2):
-        cnt = 0
-        for i in range(len(word1)):
-            if word1[i] == word2[i]:
-                cnt += 1
-        return cnt
-
-    def findLadders(self, beginWord, endWord, wordList):
-        """
-        :type beginWord: str
-        :type endWord: str
-        :type wordList: List[str]
-        :rtype: List[List[str]]
-        """
-        newList = [[beginWord], [endWord]]
-        n = len(beginWord)
-        length = n - self.find_similarity(beginWord, endWord)
-        begin_list = [[beginWord]]
-        begin_list.extend([] for _ in range(length))
-        end_list = [[] for _ in range(length)]
-        end_list.insert(0, [beginWord])
-        for word in wordList:
-            begin_similarity = self.find_similarity(word, beginWord)
-            end_similarity = self.find_similarity(word, endWord)
-            begin_list[n - begin_similarity].append(word)
-            end_list[end_similarity].append(word)
-            # if begin_similarity + end_similarity == n:
-            #     return
-        print(begin_list)
-        print(end_list)
-
-
-solve = Solution()
-print(solve.findLadders(beginWord, endWord, wordList))
-
-# ############################### 127. 单词接龙 ###############################
-beginWord = "hit",
-endWord = "cog",
-wordList = ["hot","dot","dog","lot","log","cog"]
-# 5
-
-beginWord = "hit"
-endWord = "cog"
-wordList = ["hot","dot","dog","lot","log"]
-# 0
-
-
-class Solution(object):
-    def find_one_difference(self):
-        return
-
-    def ladderLength(self, beginWord, endWord, wordList):
-        """
-        :type beginWord: str
-        :type endWord: str
-        :type wordList: List[str]
-        :rtype: int
-        """
-
-
+#
+# beginWord = "qa"
+# endWord = "sq"
+# wordList = ["si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"]
+#
+#
+#
+# class Solution(object):
+#     # def find_similarity(self, word1, word2):
+#     #     cnt = 0
+#     #     for i in range(len(word1)):
+#     #         if word1[i] == word2[i]:
+#     #             cnt += 1
+#     #     return cnt
+#     #
+#     # def findLadders(self, beginWord, endWord, wordList):
+#     #     """
+#     #     :type beginWord: str
+#     #     :type endWord: str
+#     #     :type wordList: List[str]
+#     #     :rtype: List[List[str]]
+#     #     """
+#     #     n = len(beginWord)
+#     #     res = []
+#     #
+#     #     def sub_ladder(cur_word, lis, tmp):
+#     #         if cur_word == endWord:
+#     #             res.append(tmp + [cur_word])
+#     #         if not lis:
+#     #             return
+#     #         rem = []
+#     #         next_word = []
+#     #         for word in lis:
+#     #             if self.find_similarity(cur_word, word) == n - 1:
+#     #                 next_word.append(word)
+#     #             else:
+#     #                 rem.append(word)
+#     #         if not next_word:
+#     #             return
+#     #         for word in next_word:
+#     #             sub_ladder(word, rem, tmp + [cur_word])
+#     #
+#     #     sub_ladder(beginWord, wordList, [])
+#     #     return res
+#
+#
+#     def findLadders(self, beginWord: str, endWord: str, wordList: list) -> list:
+#         wordList = set(wordList)  # 转换为hash实现O(1)的in判断
+#         if endWord not in wordList:
+#             return []
+#         # 分别为答案、用于剪枝的已访问哈希，前向分支和后向分支，当前的前向分支以及后向分支中的路径和的长度
+#         # 前向路径分支与后向路径分支的字典结构为{结束词：到达该结束词的路径列表}
+#         res, visited, forward, backward, _len = [], set(), {beginWord: [[beginWord]]}, {endWord: [[endWord]]}, 2
+#         while forward:
+#             if len(forward) > len(backward):  # 始终从路径分支较少的一端做BFS
+#                 forward, backward = backward, forward
+#             tmp = {}  # 存储新的前向分支
+#             while forward:
+#                 word, paths = forward.popitem()  # 取出路径结束词以及到达它的所有路径
+#                 visited.add(word)  # 记录已访问
+#                 for i in range(len(word)):
+#                     for a in 'abcdefghijklmnopqrstuvwxyz':
+#                         new = word[:i]+a+word[i+1:]  # 对结束词尝试每一位的置换
+#                         if new in backward:  # 如果在后向分支列表里发现置换后的词，则路径会和
+#                             if paths[0][0] == beginWord:  # 前向分支是从beginWord开始的，添加路径会和的笛卡尔积
+#                                 res.extend(fPath + bPath[::-1] for fPath in paths for bPath in backward[new])
+#                             else:  # 后向分支是从endWord开始的，添加路径会和的笛卡尔积
+#                                 res.extend(bPath + fPath[::-1] for fPath in paths for bPath in backward[new])
+#                         if new in wordList and new not in visited:  # 仅当wordList存在该词且该词还未碰见过才进行BFS
+#                             tmp[new] = tmp.get(new, []) + [path + [new] for path in paths]
+#             _len += 1
+#             if res and _len > len(res[0]):  # res已有答案，且下一次BFS的会和路径长度已超过当前长度，不是最短
+#                 break
+#             forward = tmp  # 更新前向分支
+#         return res
+#
+#
+# solve = Solution()
+# # solve.findLadders(endWord, beginWord, wordList)
+# print(solve.findLadders(beginWord, endWord, wordList))
+#
+# # ############################### 127. 单词接龙 ###############################
+# beginWord = "hit"
+# endWord = "cog"
+# wordList = ["hot","dot","dog","lot","log","cog"]
+# # 5
+#
+# beginWord = "hit"
+# endWord = "cog"
+# wordList = ["hot","dot","dog","lot","log"]
+# # 0
+#
+# beginWord = "qa"
+# endWord = "sq"
+# wordList = ["si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"]
+#
+#
+# class Solution(object):
+#     # def find_similarity(self, word1, word2):
+#     #     cnt = 0
+#     #     for i in range(len(word1)):
+#     #         if word1[i] == word2[i]:
+#     #             cnt += 1
+#     #     return cnt
+#     #
+#     # def ladderLength(self, beginWord, endWord, wordList):
+#     #     """
+#     #     :type beginWord: str
+#     #     :type endWord: str
+#     #     :type wordList: List[str]
+#     #     :rtype: int
+#     #     """
+#     #     n = len(beginWord)
+#     #
+#     #     def sub_ladder(cur_word, lis, length):
+#     #         if cur_word == endWord:
+#     #             return length + 1
+#     #         if not lis:
+#     #             return None
+#     #         rem = []
+#     #         next_word = []
+#     #         for word in lis:
+#     #             if self.find_similarity(cur_word, word) == n - 1:
+#     #                 next_word.append(word)
+#     #             else:
+#     #                 rem.append(word)
+#     #         min_i = None
+#     #         if not next_word:
+#     #             return None
+#     #         for word in next_word:
+#     #             tmp = sub_ladder(word, rem, length + 1)
+#     #             if tmp != None:
+#     #                 if min_i:
+#     #                     min_i = min(min_i, tmp)
+#     #                 else:
+#     #                     min_i = tmp
+#     #         return min_i
+#     #
+#     #     tmp = sub_ladder(beginWord, wordList, 0)
+#     #     if tmp:
+#     #         return tmp
+#     #     else:
+#     #         return 0
+#
+#
+#     def ladderLength(self, beginWord, endWord, wordList):
+#         if endWord not in wordList:
+#             return 0
+#         wordict = set(wordList)
+#         s1 = {beginWord}
+#         s2 = {endWord}
+#         n = len(beginWord)
+#         step = 0
+#         wordict.remove(endWord)
+#         while s1 and s2:
+#             step += 1
+#             if len(s1) > len(s2): s1, s2 = s2, s1
+#             s = set()
+#             for word in s1:
+#                 nextword = [word[:i] + chr(j) + word[i + 1:] for j in range(97, 123) for i in range(n)]
+#                 for w in nextword:
+#                     if w in s2:
+#                         return step + 1
+#                     if w not in wordict: continue
+#                     wordict.remove(w)
+#                     s.add(w)
+#             s1 = s
+#         return 0
+#
+#
 # solve = Solution()
 # print(solve.ladderLength(beginWord, endWord, wordList))
 
 # ############################### 128. 最长连续序列 ###############################
 nums = [100, 4, 200, 1, 3, 2]       # 4
+nums = [1,2,0,1]       # 3
+nums = [9,1,4,7,3,-1,0,5,8,-1,6]
 
 
 class Solution(object):
@@ -480,10 +589,31 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
+        nums = set(nums)
+        # for num in nums:
+        #     if num
 
 
-# solve = Solution()
-# print(solve.longestConsecutive(nums))
+        # # 复杂度为O(nlogn);要求O(n)
+        # if not nums:
+        #     return 0
+        # nums.sort()
+        # cnt = 1
+        # tmp = 1
+        # for i, num in enumerate(nums[1:]):
+        #     if num == nums[i] + 1:
+        #         tmp += 1
+        #     elif num == nums[i]:
+        #         continue
+        #     else:
+        #         cnt = max(cnt, tmp)
+        #         tmp = 1
+        # cnt = max(cnt, tmp)
+        # return cnt
+
+
+solve = Solution()
+print(solve.longestConsecutive(nums))
 
 # ############################### 129. 求根到叶子节点数字之和 ###############################
 # x = stringToTreeNode('[1,2,3]')      # 25
