@@ -578,42 +578,50 @@ def stringToTreeNode(input):
 # print(solve.ladderLength(beginWord, endWord, wordList))
 
 # ############################### 128. 最长连续序列 ###############################
-nums = [100, 4, 200, 1, 3, 2]       # 4
-nums = [1,2,0,1]       # 3
-nums = [9,1,4,7,3,-1,0,5,8,-1,6]
-
-
-class Solution(object):
-    def longestConsecutive(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: int
-        """
-        nums = set(nums)
-        # for num in nums:
-        #     if num
-
-
-        # # 复杂度为O(nlogn);要求O(n)
-        # if not nums:
-        #     return 0
-        # nums.sort()
-        # cnt = 1
-        # tmp = 1
-        # for i, num in enumerate(nums[1:]):
-        #     if num == nums[i] + 1:
-        #         tmp += 1
-        #     elif num == nums[i]:
-        #         continue
-        #     else:
-        #         cnt = max(cnt, tmp)
-        #         tmp = 1
-        # cnt = max(cnt, tmp)
-        # return cnt
-
-
-solve = Solution()
-print(solve.longestConsecutive(nums))
+# nums = [100, 4, 200, 1, 3, 2]       # 4
+# # nums = [1,2,0,1]       # 3
+# # nums = [9,1,4,7,3,-1,0,5,8,-1,6]  # 7
+#
+#
+# class Solution(object):
+#     def longestConsecutive(self, nums):
+#         """
+#         :type nums: List[int]
+#         :rtype: int
+#         """
+#         nums = set(nums)
+#         cnt = 1
+#         for num in nums:
+#             if num - 1 not in nums:
+#                 tmp = 1
+#                 while num + 1 in nums:
+#                     tmp += 1
+#                     num += 1
+#                 cnt = max(cnt, tmp)
+#
+#         return cnt
+#
+#
+#         # # 复杂度为O(nlogn);要求O(n)
+#         # if not nums:
+#         #     return 0
+#         # nums.sort()
+#         # cnt = 1
+#         # tmp = 1
+#         # for i, num in enumerate(nums[1:]):
+#         #     if num == nums[i] + 1:
+#         #         tmp += 1
+#         #     elif num == nums[i]:
+#         #         continue
+#         #     else:
+#         #         cnt = max(cnt, tmp)
+#         #         tmp = 1
+#         # cnt = max(cnt, tmp)
+#         # return cnt
+#
+#
+# solve = Solution()
+# print(solve.longestConsecutive(nums))
 
 # ############################### 129. 求根到叶子节点数字之和 ###############################
 # x = stringToTreeNode('[1,2,3]')      # 25
@@ -659,6 +667,8 @@ board = [['X','X','X','X'],
 #  ['X X X X'],
 #  ['X O X X']]
 
+board = []
+
 
 class Solution(object):
     def solve(self, board):
@@ -666,21 +676,64 @@ class Solution(object):
         :type board: List[List[str]]
         :rtype: None Do not return anything, modify board in-place instead.
         """
-        dp = [[1] * len(board[0]) for _ in range(len(board))]
-        for i in range(len(board)):
-            for j in range(len(board[0])):
-                if i == 0 or j == 0 or i == len(board) - 1 or j == len(board[0]) - 1:
-                    dp[i][j] = board[i][j] == 'X'
+        # 从边界找O
+        if not board:
+            return
+        n = len(board)
+        m = len(board[0])
+        if m == 0:
+            return
+
+        # 这个函数实际上用到的是DFS的思想，还可以用BFS
+        def find_O(i, j):
+            board[i][j] = 'K'
+
+            # 可以简写成这样
+            # for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            #     tmp_i = i + x
+            #     tmp_j = j + y
+            #     if 1 <= tmp_i < n and 1 <= tmp_j < m and board[tmp_i][tmp_j] == "O":
+            #         find_O(tmp_i, tmp_j)
+
+            if i - 1 >= 0 and board[i - 1][j] == 'O':
+                find_O(i - 1, j)
+            if i + 1 < n and board[i + 1][j] == 'O':
+                find_O(i + 1, j)
+            if j - 1 >= 0 and board[i][j - 1] == 'O':
+                find_O(i, j - 1)
+            if j + 1 < m and board[i][j + 1] == 'O':
+                find_O(i, j + 1)
+
+        # def bfs(i, j):
+        #     from collections import deque
+        #     queue = deque()
+        #     queue.appendleft((i, j))
+        #     while queue:
+        #         i, j = queue.pop()
+        #         if 0 <= i < n and 0 <= j < m and board[i][j] == "O":
+        #             board[i][j] = "B"
+        #             for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        #                 queue.appendleft((i + x, j + y))
+
+        for i in range(n):
+            if board[i][0] == 'O':
+                find_O(i, 0)
+            if board[i][m - 1] == 'O':
+                find_O(i, m - 1)
+        for j in range(m):
+            if board[0][j] == 'O':
+                find_O(0, j)
+            if board[n - 1][j] == 'O':
+                find_O(n - 1, j)
+
+        for i in range(n):
+            for j in range(m):
+                if board[i][j] == 'K':
+                    board[i][j] = 'O'
                 else:
-                    if board[i][j] == 'X':
-                        dp[i][j] = 1
-                    else:
-                        if dp[i - 1][j] and dp[i][j - 1]:
-                            dp[i][j] = 2
-                        else:
-                            dp[i][j] = 0
+                    board[i][j] = 'X'
 
 
-# solve = Solution()
-# solve.solve(board)
-# print(board)
+solve = Solution()
+solve.solve(board)
+print(board)
