@@ -431,63 +431,77 @@
 # print(solve.copyRandomList(x))
 
 # ############################### 139. 单词拆分 ###############################
-s = "leetcode"              # T
-wordDict = ["leet", "code"]
-
-# s = "applepenapple"         # T
-# wordDict = ["apple", "pen"]
-
-# s = "catsandog"             # F
-# wordDict = ["cats", "dog", "sand", "and", "cat"]
-
-# s = "catsandog"             # T
-# wordDict = ["cat", "og", "and", "cats"]
-
-s = "acaaaaabbbdbcccdcdaadcdccacbcccabbbbcdaaaaaadb"
-wordDict = ["abbcbda","cbdaaa","b","dadaaad","dccbbbc","dccadd","ccbdbc","bbca","bacbcdd","a","bacb","cbc","adc","c","cbdbcad","cdbab","db","abbcdbd","bcb","bbdab","aa","bcadb","bacbcb","ca","dbdabdb","ccd","acbb","bdc","acbccd","d","cccdcda","dcbd","cbccacd","ac","cca","aaddc","dccac","ccdc","bbbbcda","ba","adbcadb","dca","abd","bdbb","ddadbad","badb","ab","aaaaa","acba","abbb"]
-
-s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"
-wordDict = ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
-
-s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-wordDict = ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
-
-
-class Solution(object):
-    def wordBreak(self, s, wordDict):
-        """
-        :type s: str
-        :type wordDict: List[str]
-        :rtype: bool
-        """
-        # 回溯,但超时,完全是靠@functools.lru_cache(None)缓存机制过的
-        if not wordDict:
-            return not s
-        import functools
-        wordDict = set(wordDict)
-        min_len = min(map(len, wordDict))
-        max_len = max(map(len, wordDict))
-        status = [False]
-
-        @functools.lru_cache(None)
-        def backtrack(s):
-            if status[0]:
-                return
-            if not s:
-                status[0] = True
-                return
-            if len(s) < min_len:
-                return
-            for i in range(min_len, max_len + 1):
-                if s[:i] in wordDict:
-                    backtrack(s[i:])
-
-        backtrack(s)
-        return status[0]
-
-
-solve = Solution()
-print(solve.wordBreak(s, wordDict))
+# s = "leetcode"              # T
+# wordDict = ["leet", "code"]
+#
+# # s = "applepenapple"         # T
+# # wordDict = ["apple", "pen"]
+#
+# # s = "catsandog"             # F
+# # wordDict = ["cats", "dog", "sand", "and", "cat"]
+#
+# # s = "catsandog"             # T
+# # wordDict = ["cat", "og", "and", "cats"]
+#
+# s = "acaaaaabbbdbcccdcdaadcdccacbcccabbbbcdaaaaaadb"
+# wordDict = ["abbcbda","cbdaaa","b","dadaaad","dccbbbc","dccadd","ccbdbc","bbca","bacbcdd","a","bacb","cbc","adc","c","cbdbcad","cdbab","db","abbcdbd","bcb","bbdab","aa","bcadb","bacbcb","ca","dbdabdb","ccd","acbb","bdc","acbccd","d","cccdcda","dcbd","cbccacd","ac","cca","aaddc","dccac","ccdc","bbbbcda","ba","adbcadb","dca","abd","bdbb","ddadbad","badb","ab","aaaaa","acba","abbb"]
+#
+# s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"
+# wordDict = ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
+#
+# s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+# wordDict = ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
+#
+#
+# class Solution(object):
+#     def wordBreak(self, s, wordDict):
+#         """
+#         :type s: str
+#         :type wordDict: List[str]
+#         :rtype: bool
+#         """
+#         # 相当于将之前的结果记住,利用之前的结果存在dp里
+#         n = len(s)
+#         if not wordDict: return not s
+#         wordDict = set(wordDict)
+#         dp = [False] * (n + 1)
+#         dp[0] = True
+#         for i in range(1, n + 1):
+#             for j in range(i - 1, -1, -1):
+#                 if dp[j] and s[j:i] in wordDict:
+#                     dp[i] = True
+#                     break
+#         return dp[-1]
+#
+#
+#         # # 回溯,但超时,完全是靠@functools.lru_cache(None)缓存机制过的
+#         # if not wordDict:
+#         #     return not s
+#         # import functools
+#         # wordDict = set(wordDict)
+#         # min_len = min(map(len, wordDict))
+#         # max_len = max(map(len, wordDict))
+#         # status = [False]
+#         #
+#         # @functools.lru_cache(None)
+#         # def backtrack(s):
+#         #     if status[0]:
+#         #         return
+#         #     if not s:
+#         #         status[0] = True
+#         #         return
+#         #     if len(s) < min_len:
+#         #         return
+#         #     for i in range(min_len, max_len + 1):
+#         #         if s[:i] in wordDict:
+#         #             backtrack(s[i:])
+#         #
+#         # backtrack(s)
+#         # return status[0]
+#
+#
+# solve = Solution()
+# print(solve.wordBreak(s, wordDict))
 
 # ############################### 140. 单词拆分 II ###############################
 s = "catsanddog"
@@ -505,15 +519,15 @@ wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
 #   "pine applepen apple"
 # ]
 
-# s = "catsandog"
-# wordDict = ["cats", "dog", "sand", "and", "cat"]
-# # []
+s = "catsandog"
+wordDict = ["cats", "dog", "sand", "and", "cat"]
+# []
 
 # s = "acaaaaabbbdbcccdcdaadcdccacbcccabbbbcdaaaaaadb"
 # wordDict = ["abbcbda","cbdaaa","b","dadaaad","dccbbbc","dccadd","ccbdbc","bbca","bacbcdd","a","bacb","cbc","adc","c","cbdbcad","cdbab","db","abbcdbd","bcb","bbdab","aa","bcadb","bacbcb","ca","dbdabdb","ccd","acbb","bdc","acbccd","d","cccdcda","dcbd","cbccacd","ac","cca","aaddc","dccac","ccdc","bbbbcda","ba","adbcadb","dca","abd","bdbb","ddadbad","badb","ab","aaaaa","acba","abbb"]
 
-s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-wordDict = ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
+# s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+# wordDict = ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
 
 
 class Solution(object):
@@ -523,6 +537,67 @@ class Solution(object):
         :type wordDict: List[str]
         :rtype: List[str]
         """
+        # # 加入记忆的回溯
+        # if not s:
+        #     return []
+        # _len, wordDict = len(s), set(wordDict)
+        # _min = min(map(len, wordDict))
+        # _max = max(map(len, wordDict))
+        #
+        # def dfs(start):  # 返回s[start:]能由字典构成的所有句子
+        #     if start not in memo:
+        #         res = []
+        #         for i in range(_min, min(_max, _len - start) + 1):
+        #             if s[start: start + i] in wordDict:  # 找到了
+        #                 res.extend(list(map(lambda x: s[start: start + i] + ' ' + x, dfs(start + i))))  # 添加
+        #         memo[start] = res  # 加入记忆
+        #     return memo[start]
+        #
+        # memo = {_len: ['']}  # 初始化记忆化存储
+        # return list(map(lambda x: x[:-1], dfs(0)))  # 去掉末尾多出的一个空格
+
+
+        # 有bug
+        # if not wordDict:
+        #     return []
+        # wordDict = set(wordDict)
+        # min_len = min(map(len, wordDict))
+        # max_len = max(map(len, wordDict))
+        # rem = {}
+        #
+        # def combine(l1, l2):
+        #     if not l1:
+        #         return l2
+        #     if not l2:
+        #         return l1
+        #     res = []
+        #     for s1 in l1:
+        #         for s2 in l2:
+        #             res.append(s1 + ' ' + s2)
+        #     return res
+        #
+        # def backtrack(s):
+        #     res = []
+        #     if not s:
+        #         return []
+        #     if len(s) < min_len:
+        #         return []
+        #     for i in range(min_len, min(max_len, len(s)) + 1):
+        #         if s[:i] in wordDict:
+        #             # res.append(s[:i])
+        #             if s[i:] not in rem:
+        #                 tmp = backtrack(s[i:])
+        #                 rem[s[i:]] = tmp
+        #                 res.extend(combine([s[:i]], tmp))
+        #             else:
+        #                 res.extend(combine([s[:i]], rem[s[i:]]))
+        #     return res
+        #
+        # res = backtrack(s)
+        # return res
+
+
+        # 回溯,但很容易超时
         # if not wordDict:
         #     return []
         # import functools
@@ -545,25 +620,26 @@ class Solution(object):
         # backtrack(s, '')
         # return res
 
-        import functools
-        if not wordDict:return []
-        wordDict = set(wordDict)
-        max_len = max(map(len, wordDict))
-        @functools.lru_cache(None)
-        def helper(s):
-            res = []
-            if not s:
-                res.append("")
-                return res
-            for i in range(len(s)):
-                if i < max_len and s[:i+1] in wordDict:
-                    for t in helper(s[i+1:]):
-                        if not t:
-                            res.append(s[:i+1])
-                        else:
-                            res.append(s[:i+1] + " " + t)
-            return res
-        return helper(s)
+
+        # import functools
+        # if not wordDict:return []
+        # wordDict = set(wordDict)
+        # max_len = max(map(len, wordDict))
+        # @functools.lru_cache(None)
+        # def helper(s):
+        #     res = []
+        #     if not s:
+        #         res.append("")
+        #         return res
+        #     for i in range(len(s)):
+        #         if i < max_len and s[:i+1] in wordDict:
+        #             for t in helper(s[i+1:]):
+        #                 if not t:
+        #                     res.append(s[:i+1])
+        #                 else:
+        #                     res.append(s[:i+1] + " " + t)
+        #     return res
+        # return helper(s)
 
 
 solve = Solution()
