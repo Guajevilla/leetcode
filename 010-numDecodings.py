@@ -264,116 +264,196 @@ import time
 # print(solve.restoreIpAddresses(x))
 
 # ############################### 94. 二叉树的中序遍历 ###############################
-#
-#
-# # # Definition for singly-linked list.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-#
-#
-# def create_tree(lis):
-#     root = TreeNode(lis[0])
-#     stack = [root]
-#     for i, ele in enumerate(lis):
-#         if i == 0:
-#             continue
-#         if i % 2:
-#             tmp = TreeNode(ele)
-#             stack[(i-1) // 2].left = tmp
-#             stack.append(tmp)
-#         else:
-#             tmp = TreeNode(ele)
-#             stack[(i-1) // 2].right = tmp
-#             stack.append(tmp)
-#     return root
-#
-#
-# def print_tree(root: TreeNode):
-#     res = []
-#     queue = [root]
-#     while queue:
-#         tmp = queue.pop(0)
-#         res.append(tmp.val)
-#         if tmp.left:
-#             queue.append(tmp.left)
-#         if tmp.right:
-#             queue.append(tmp.right)
-#
-#     print(res)
-#
-#
-# # # 前序遍历
-# # def print_tree(root: TreeNode):
-# #     res = []
-# #
-# #     def helper(root: TreeNode):
-# #         if root:
-# #             res.append(root.val)
-# #             helper(root.left)
-# #             helper(root.right)
-# #
-# #     helper(root)
-# #     print(res)
-#
-#
-# class Solution(object):
-#     def inorderTraversal(self, root):
-#         """
-#         :type root: TreeNode
-#         :rtype: List[int]
-#         """
-#         # 迭代 因为需要不断回溯,所以需要压栈记住之前的节点,并记住之前已经进过的节点
-#         res = []
-#         stack = [root]
-#         rem = []
-#         while stack:
-#             p = stack.pop()
-#             if p.left and p not in rem:
-#                 stack.append(p)
-#                 rem.append(p)
-#                 stack.append(p.left)
-#             else:
-#                 res.append(p.val)
-#                 if p.right:
-#                     stack.append(p.right)
-#         return res
-#
-#         # # 别人的迭代
-#         # res = []
-#         # stack = []
-#         # # 用p当做指针
-#         # p = root
-#         # while p or stack:
-#         #     # 把左子树压入栈中
-#         #     while p:
-#         #         stack.append(p)
-#         #         p = p.left
-#         #     # 输出 栈顶元素
-#         #     p = stack.pop()
-#         #     res.append(p.val)
-#         #     # 看右子树
-#         #     p = p.right
-#         # return res
-#
-#
-#         # # 递归很好写
-#         # res = []
-#         #
-#         # def helper(root):
-#         #     if root:
-#         #         helper(root.left)
-#         #         res.append(root.val)
-#         #         helper(root.right)
-#         #
-#         # helper(root)
-#         # return res
-#
-#
-# solve = Solution()
-# print(solve.inorderTraversal(x))
+
+
+# # Definition for singly-linked list.
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+def treeNodeToString(root):
+    if not root:
+        return "[]"
+    output = ""
+    queue = [root]
+    current = 0
+    while current != len(queue):
+        node = queue[current]
+        current = current + 1
+
+        if not node:
+            output += "null, "
+            continue
+
+        output += str(node.val) + ", "
+        queue.append(node.left)
+        queue.append(node.right)
+    return "[" + output[:-2] + "]"
+
+
+# Definition for a binary tree node.
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+        self.right = None
+
+
+def prettyPrintTree(node, prefix="", isLeft=True):
+    if not node:
+        print("Empty Tree")
+        return
+
+    if node.right:
+        prettyPrintTree(node.right, prefix + ("│   " if isLeft else "    "), False)
+
+    print(prefix + ("└── " if isLeft else "┌── ") + str(node.val))
+
+    if node.left:
+        prettyPrintTree(node.left, prefix + ("    " if isLeft else "│   "), True)
+
+
+def treeNodeToString(root):
+    if not root:
+        return "[]"
+    output = ""
+    queue = [root]
+    current = 0
+    while current != len(queue):
+        node = queue[current]
+        current = current + 1
+
+        if not node:
+            output += "null, "
+            continue
+
+        output += str(node.val) + ", "
+        queue.append(node.left)
+        queue.append(node.right)
+    return "[" + output[:-2] + "]"
+
+
+def stringToTreeNode(input):
+    """
+    :param input: must be string e.g: stringToTreeNode('[1,null,2]')
+    :return: TreeNode
+    """
+    input = input.strip()
+    input = input[1:-1]
+    if not input:
+        return None
+
+    inputValues = [s.strip() for s in input.split(',')]
+    root = TreeNode(int(inputValues[0]))
+    nodeQueue = [root]
+    front = 0
+    index = 1
+    while index < len(inputValues):
+        node = nodeQueue[front]
+        front = front + 1
+
+        item = inputValues[index]
+        index = index + 1
+        if item != "null":
+            leftNumber = int(item)
+            node.left = TreeNode(leftNumber)
+            nodeQueue.append(node.left)
+
+        if index >= len(inputValues):
+            break
+
+        item = inputValues[index]
+        index = index + 1
+        if item != "null":
+            rightNumber = int(item)
+            node.right = TreeNode(rightNumber)
+            nodeQueue.append(node.right)
+    return root
+
+
+x = stringToTreeNode('[1,2,3,4,5,6,7]')
+x = stringToTreeNode('[1,null,2,3]')
+x = stringToTreeNode('[]')
+
+
+class Solution(object):
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return root
+        res = []
+        stack = [root]
+        rem = set()
+        while stack:
+            tmp = stack.pop()
+            if tmp not in rem and tmp.right:
+                stack.append(tmp.right)
+            if tmp in rem or not tmp.left:
+                res.append(tmp.val)
+                continue
+            stack.append(tmp)
+            if tmp.left:
+                stack.append(tmp.left)
+            rem.add(tmp)
+
+        return res
+
+        # # 迭代 因为需要不断回溯,所以需要压栈记住之前的节点,并记住之前已经进过的节点
+        # res = []
+        # stack = [root]
+        # rem = []
+        # while stack:
+        #     p = stack.pop()
+        #     if p.left and p not in rem:
+        #         stack.append(p)
+        #         rem.append(p)
+        #         stack.append(p.left)
+        #     else:
+        #         res.append(p.val)
+        #         if p.right:
+        #             stack.append(p.right)
+        # return res
+
+        # # 别人的迭代
+        # res = []
+        # stack = []
+        # # 用p当做指针
+        # p = root
+        # while p or stack:
+        #     # 把左子树压入栈中
+        #     while p:
+        #         stack.append(p)
+        #         p = p.left
+        #     # 输出 栈顶元素
+        #     p = stack.pop()
+        #     res.append(p.val)
+        #     # 看右子树
+        #     p = p.right
+        # return res
+
+
+        # # 递归很好写
+        # res = []
+        #
+        # def helper(root):
+        #     if root:
+        #         helper(root.left)
+        #         res.append(root.val)
+        #         helper(root.right)
+        #
+        # helper(root)
+        # return res
+
+
+solve = Solution()
+print(solve.inorderTraversal(x))
 
 # ############################### 95. 不同的二叉搜索树 II ###############################
 

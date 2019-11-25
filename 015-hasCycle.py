@@ -302,26 +302,46 @@ solve = Solution()
 print(solve.preorderTraversal(x))
 
 # ############################### 145. 二叉树的后序遍历 ###############################
-x = stringToTreeNode('[1,2,null,null,3]')
-x = stringToTreeNode('[1,null,2,3]')            # [3,2,1]
+x = stringToTreeNode('[1,2,null,null,3]')            # [3,2,1]
+# x = stringToTreeNode('[1,null,2,3]')                # [3,2,1]
+x = stringToTreeNode('[1,2,3,4,5,6,7]')            # [4,5,2,6,7,3,1]
+# x = stringToTreeNode('[]')            # [3,2,1]
 
 
 class Solution:
     def postorderTraversal(self, root: TreeNode):
-        # 迭代
-        if not root:
-            return []
-        stack = [root]
-        res = []
-        while stack:
-            tmp = stack.pop()
-            res.append(tmp.val)
-            if tmp.right:
-                stack.append(tmp.right)
-            if tmp.left:
-                stack.append(tmp.left)
+        # 迭代,当节点访问过才弹出
+        # if not root:
+        #     return []
+        # stack = [root]
+        # res = []
+        # rem = set()
+        # while stack:
+        #     tmp = stack[-1]
+        #     if tmp in rem or not (tmp.left or tmp.right):
+        #         res.append(tmp.val)
+        #         stack.pop()
+        #         continue
+        #     if tmp.right:
+        #         stack.append(tmp.right)
+        #     if tmp.left:
+        #         stack.append(tmp.left)
+        #     rem.add(tmp)
+        #
+        # return res
 
-        return res
+
+        # 别人的迭代,利用前序反过来
+        res = []
+        p = root
+        stack = []
+        while p or stack:
+            while p:
+                res.append(p.val)
+                stack.append(p)
+                p = p.right
+            p = stack.pop().left
+        return res[::-1]
 
 
         # # 递归
