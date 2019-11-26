@@ -263,43 +263,43 @@ head = stringToListNode('[1,2,3]')
 # printList(x)
 
 # ############################### 144. 二叉树的前序遍历 ###############################
-x = stringToTreeNode('[1,2,null,null,3]')
-# x = stringToTreeNode('[3,1,2]')
-
-
-class Solution:
-    def preorderTraversal(self, root: TreeNode):
-        # 迭代
-        if not root:
-            return []
-        stack = [root]
-        res = []
-        while stack:
-            tmp = stack.pop()
-            res.append(tmp.val)
-            if tmp.right:
-                stack.append(tmp.right)
-            if tmp.left:
-                stack.append(tmp.left)
-
-        return res
-
-        # # 递归
-        # res = []
-        #
-        # def pre_order(root):
-        #     if not root:
-        #         return
-        #     res.append(root.val)
-        #     pre_order(root.left)
-        #     pre_order(root.right)
-        #
-        # pre_order(root)
-        # return res
-
-
-solve = Solution()
-print(solve.preorderTraversal(x))
+# x = stringToTreeNode('[1,2,null,null,3]')
+# # x = stringToTreeNode('[3,1,2]')
+#
+#
+# class Solution:
+#     def preorderTraversal(self, root: TreeNode):
+#         # 迭代
+#         if not root:
+#             return []
+#         stack = [root]
+#         res = []
+#         while stack:
+#             tmp = stack.pop()
+#             res.append(tmp.val)
+#             if tmp.right:
+#                 stack.append(tmp.right)
+#             if tmp.left:
+#                 stack.append(tmp.left)
+#
+#         return res
+#
+#         # # 递归
+#         # res = []
+#         #
+#         # def pre_order(root):
+#         #     if not root:
+#         #         return
+#         #     res.append(root.val)
+#         #     pre_order(root.left)
+#         #     pre_order(root.right)
+#         #
+#         # pre_order(root)
+#         # return res
+#
+#
+# solve = Solution()
+# print(solve.preorderTraversal(x))
 
 # ############################### 145. 二叉树的后序遍历 ###############################
 x = stringToTreeNode('[1,2,null,null,3]')            # [3,2,1]
@@ -308,55 +308,270 @@ x = stringToTreeNode('[1,2,3,4,5,6,7]')            # [4,5,2,6,7,3,1]
 # x = stringToTreeNode('[]')            # [3,2,1]
 
 
-class Solution:
-    def postorderTraversal(self, root: TreeNode):
-        # 迭代,当节点访问过才弹出
-        # if not root:
-        #     return []
-        # stack = [root]
-        # res = []
-        # rem = set()
-        # while stack:
-        #     tmp = stack[-1]
-        #     if tmp in rem or not (tmp.left or tmp.right):
-        #         res.append(tmp.val)
-        #         stack.pop()
-        #         continue
-        #     if tmp.right:
-        #         stack.append(tmp.right)
-        #     if tmp.left:
-        #         stack.append(tmp.left)
-        #     rem.add(tmp)
-        #
-        # return res
+# class Solution:
+#     def postorderTraversal(self, root: TreeNode):
+#         # 迭代,当节点访问过才弹出
+#         # if not root:
+#         #     return []
+#         # stack = [root]
+#         # res = []
+#         # rem = set()
+#         # while stack:
+#         #     tmp = stack[-1]
+#         #     if tmp in rem or not (tmp.left or tmp.right):
+#         #         res.append(tmp.val)
+#         #         stack.pop()
+#         #         continue
+#         #     if tmp.right:
+#         #         stack.append(tmp.right)
+#         #     if tmp.left:
+#         #         stack.append(tmp.left)
+#         #     rem.add(tmp)
+#         #
+#         # return res
+#
+#
+#         # 别人的迭代,利用前序反过来,模仿先序生成“根右左”再反转输出就是“左右根
+#         res = []
+#         p = root
+#         stack = []
+#         while p or stack:
+#             while p:
+#                 res.append(p.val)
+#                 stack.append(p)
+#                 p = p.right
+#             p = stack.pop().left
+#         return res[::-1]
+#
+#
+#         # # 递归
+#         # res = []
+#         #
+#         # def post_order(root):
+#         #     if not root:
+#         #         return
+#         #     post_order(root.left)
+#         #     post_order(root.right)
+#         #     res.append(root.val)
+#         #
+#         # post_order(root)
+#         # return res
+#
+#
+# solve = Solution()
+# print(solve.postorderTraversal(x))
+
+# ############################### 146. LRU缓存机制 ###############################
+# 获取数据 get(key) - 如果密钥 (key) 存在于缓存中，则获取密钥的值（总是正数），否则返回 -1。
+# 写入数据 put(key, value) - 如果密钥不存在，则写入其数据值。当缓存容量达到上限时，它应该在写入新数据之前删除最近最少使用的数据值，从而为新的数据值留出空间。
+# O(1) 时间复杂度
 
 
-        # 别人的迭代,利用前序反过来
-        res = []
-        p = root
-        stack = []
-        while p or stack:
-            while p:
-                res.append(p.val)
-                stack.append(p)
-                p = p.right
-            p = stack.pop().left
-        return res[::-1]
+class LRUCache(object):
+
+    def __init__(self, capacity):
+        """
+        :type capacity: int
+        """
+        self.capacity = capacity
+
+    def get(self, key):
+        """
+        :type key: int
+        :rtype: int
+        """
 
 
-        # # 递归
-        # res = []
-        #
-        # def post_order(root):
-        #     if not root:
-        #         return
-        #     post_order(root.left)
-        #     post_order(root.right)
-        #     res.append(root.val)
-        #
-        # post_order(root)
-        # return res
+    def put(self, key, value):
+        """
+        :type key: int
+        :type value: int
+        :rtype: None
+        """
 
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
 
-solve = Solution()
-print(solve.postorderTraversal(x))
+# # ############################### 147. 对链表进行插入排序 ###############################
+# x = stringToListNode('[4,2,1,3]')
+# x = stringToListNode('[1,5,3,4,0]')
+#
+#
+# class Solution(object):
+#     def insertionSortList(self, head):
+#         """
+#         :type head: ListNode
+#         :rtype: ListNode
+#         """
+#         if not (head and head.next):
+#             return head
+#         dummy = ListNode(0)
+#         dummy.next = head
+#         p = head.next
+#         pre = head
+#         while p:
+#             pass
+#
+#
+# solve = Solution()
+# printList(solve.insertionSortList(x))
+
+# # ############################### 148. 排序链表 ###############################
+# # O(n log n) 时间复杂度和常数级空间复杂度
+#
+#
+# class Solution(object):
+#     def sortList(self, head):
+#         """
+#         :type head: ListNode
+#         :rtype: ListNode
+#         """
+#
+#
+# solve = Solution()
+# printList(solve.sortList(x))
+
+# ############################### 149. 直线上最多的点数 ###############################
+# x = [[1,1],[2,2],[3,3]]     # 3
+# x = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]   # 4
+# x = [[1,1],[0,0],[1,1]]   # 3
+# x = [[1,1],[0,0]]   # 2
+# x = [[1,1],[1,1]]   # 2
+# x = [[1,1],[0,0],[1,1],[0,0],[2,3]]   # 4
+# x = [[1,1],[1,1],[1,1],[0,1],[10,11]]   # 4
+# x = [[1,1],[1,1],[1,1],[0,1]]   # 4
+# x = [[2,3],[3,3],[-5,3],[2,1]]   # 3
+# x = [[3,-1],[3,2],[3,1],[2,1]]   # 3
+# x = [[84,250],[0,0],[1,0],[0,-70],[0,-70],[1,-1],[21,10],[42,90],[-42,-230]]   # 6
+# x = [[94911152, 94911151],[0,0],[94911151, 94911150]]   # 2
+# x = [[0,-12],[5,2],[2,5],[0,-5],[1,5],[2,-2],[5,-4],[3,4],[-2,4],[-1,4],[0,-5],[0,-8],[-2,-1],[0,-11],[0,-9]]
+# x = [[3,10],[0,2],[0,2],[3,10]]     # 4
+# x = [[-435,-347],[-435,-347],[609,613],[-348,-267],[-174,-107],[87,133],[-87,-27],[-609,-507],[435,453],[-870,-747],[-783,-667],[0,53],[-174,-107],[783,773],[-261,-187],[-609,-507],[-261,-187],[-87,-27],[87,133],[783,773],[-783,-667],[-609,-507],[-435,-347],[783,773],[-870,-747],[87,133],[87,133],[870,853],[696,693],[0,53],[174,213],[-783,-667],[-609,-507],[261,293],[435,453],[261,293],[435,453]]
+# # 37
+#
+#
+# class Solution(object):
+#     def maxPoints(self, points):
+#         """
+#         :type points: List[List[int]]
+#         :rtype: int
+#         """
+#         if not points:
+#             return 0
+#         cnt = 1
+#         for i, point1 in enumerate(points):
+#             repeat = 0
+#             for j, point2 in enumerate(points[i+1:]):
+#                 tmp = 1
+#                 if point2[0] == point1[0]:
+#                     if point2 == point1:
+#                         repeat += 1
+#                         cnt = max(cnt, tmp + repeat)
+#                         continue
+#                     else:
+#                         tmp += 1
+#                         for point in points[i+j+2:]:
+#                             if point[0] == point1[0]:
+#                                 tmp += 1
+#                         cnt = max(cnt, tmp + repeat)
+#                         break
+#                 else:
+#                     slope = (point2[1] - point1[1]) / (point2[0] - point1[0])
+#                     tmp += 1
+#                     for point in points[i+j+2:]:
+#                         if point[0] == point1[0]:
+#                             if point == point1 and j == 0:
+#                                 repeat += 1
+#                             continue
+#                         if (point[1] - point1[1]) / (point[0] - point1[0]) == slope:
+#                             tmp += 1
+#                 cnt = max(cnt, tmp + repeat)
+#         return cnt
+#
+#
+#
+#         from collections import Counter, defaultdict
+#         # 所有点统计
+#         points_dict = Counter(tuple(point) for point in points)
+#         # 把唯一点列举出来
+#         not_repeat_points = list(points_dict.keys())
+#         n = len(not_repeat_points)
+#         if n == 1: return points_dict[not_repeat_points[0]]
+#         res = 0
+#
+#         # 求最大公约数
+#         def gcd(x, y):
+#             if y == 0:
+#                 return x
+#             else:
+#                 return gcd(y, x % y)
+#
+#         for i in range(n - 1):
+#             # 点1
+#             x1, y1 = not_repeat_points[i][0], not_repeat_points[i][1]
+#             # 斜率
+#             slope = defaultdict(int)
+#             for j in range(i + 1, n):
+#                 # 点2
+#                 x2, y2 = not_repeat_points[j][0], not_repeat_points[j][1]
+#                 dy, dx = y2 - y1, x2 - x1
+#                 # 方式一 利用公约数
+#                 g = gcd(dy, dx)
+#                 if g != 0:
+#                     dy //= g
+#                     dx //= g
+#                 slope["{}/{}".format(dy, dx)] += points_dict[not_repeat_points[j]]
+#                 # --------------------
+#                 # 方式二, 利用除法(不准确, 速度快)
+#                 # if dx == 0:
+#                 #     tmp = "#"
+#                 # else:
+#                 #     tmp = dy * 1000 / dx * 1000
+#                 # slope[tmp] += points_dict[not_repeat_points[j]]
+#                 # ------------------------------
+#             res = max(res, max(slope.values()) + points_dict[not_repeat_points[i]])
+#         return res
+#
+#
+# solve = Solution()
+# print(solve.maxPoints(x))
+
+# ############################### 150. 逆波兰表达式求值 ###############################
+# x = ["2", "1", "+", "3", "*"]       # 9
+# x = ["4", "13", "5", "/", "+"]      # 6
+# x = ["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]   # 22
+# x = ["-78","-33","196","+","-19","-","115","+","-","-99","/","-18","8","*","-86","-","-","16","/","26","-14","-","-","47","-","101","-","163","*","143","-","0","-","171","+","120","*","-60","+","156","/","173","/","-24","11","+","21","/","*","44","*","180","70","-40","-","*","86","132","-84","+","*","-","38","/","/","21","28","/","+","83","/","-31","156","-","+","28","/","95","-","120","+","8","*","90","-","-94","*","-73","/","-62","/","93","*","196","-","-59","+","187","-","143","/","-79","-89","+","-"]
+# # 165
+#
+#
+# class Solution(object):
+#     def evalRPN(self, tokens):
+#         """
+#         :type tokens: List[str]
+#         :rtype: int
+#         """
+#         num = []
+#         ops = {'+', '-', '*', '/'}
+#         for ele in tokens:
+#             if ele in ops:
+#                 num0 = num.pop()
+#                 num1 = num.pop()
+#                 if ele == '+':
+#                     num.append(num1 + num0)
+#                 elif ele == '-':
+#                     num.append(num1 - num0)
+#                 elif ele == '*':
+#                     num.append(num1 * num0)
+#                 else:
+#                     # num.append(num1 // num0)
+#                     num.append(int(num1 / float(num0)))
+#             else:
+#                 num.append(int(ele))
+#
+#         return num[0]
+#
+#
+# solve = Solution()
+# print(solve.evalRPN(x))
