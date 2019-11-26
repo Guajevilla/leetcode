@@ -366,37 +366,121 @@ x = stringToTreeNode('[1,2,3,4,5,6,7]')            # [4,5,2,6,7,3,1]
 # 写入数据 put(key, value) - 如果密钥不存在，则写入其数据值。当缓存容量达到上限时，它应该在写入新数据之前删除最近最少使用的数据值，从而为新的数据值留出空间。
 # O(1) 时间复杂度
 
+# from collections import OrderedDict
+#
+#
+# # 主要用到了OrderedDict有序字典
+# # 主要函数:move_to_end(key)将键值对移到队尾
+# # popitem(last=False)弹出队首键值对
+# # popitem弹出队尾键值对
+# # 利用popitem(last=False)[0]可取弹出的键
+# # 利用popitem(last=False)[1]可取弹出的值
+# class LRUCache(object):
+#     def __init__(self, capacity):
+#         """
+#         :type capacity: int
+#         """
+#         self.capacity = capacity
+#         self.cache = OrderedDict()
+#
+#     def get(self, key):
+#         """
+#         :type key: int
+#         :rtype: int
+#         """
+#         if key in self.cache:
+#             self.cache.move_to_end(key)
+#             return self.cache[key]
+#         else:
+#             return -1
+#
+#     def put(self, key, value):
+#         """
+#         :type key: int
+#         :type value: int
+#         :rtype: None
+#         """
+#         if key not in self.cache:
+#             if len(self.cache) == self.capacity:
+#                 self.cache.popitem(last=False)
+#         else:
+#             del self.cache[key]
+#         self.cache[key] = value
 
-class LRUCache(object):
 
-    def __init__(self, capacity):
-        """
-        :type capacity: int
-        """
-        self.capacity = capacity
+# # 双向链表解决,主要想法同上,键对应的值是一个node
+# class Node:
+#     def __init__(self, key, val):
+#         self.key = key
+#         self.val = val
+#         self.prev = None
+#         self.next = None
+#
+#
+# class LRUCache:
+#
+#     def __init__(self, capacity: int):
+#         # 构建首尾节点, 使之相连
+#         self.head = Node(0, 0)
+#         self.tail = Node(0, 0)
+#         self.head.next = self.tail
+#         self.tail.prev = self.head
+#
+#         self.lookup = dict()
+#         self.max_len = capacity
+#
+#     def get(self, key: int) -> int:
+#         if key in self.lookup:
+#             node = self.lookup[key]
+#             self.remove(node)
+#             self.add(node)
+#             return node.val
+#         else:
+#             return -1
+#
+#     def put(self, key: int, value: int) -> None:
+#         if key in self.lookup:
+#             self.remove(self.lookup[key])
+#         if len(self.lookup) == self.max_len:
+#             # 把表头位置节点删除(说明最近的数据值)
+#             self.remove(self.head.next)
+#         self.add(Node(key, value))
+#
+#     # 删除链表节点
+#     def remove(self, node):
+#         del self.lookup[node.key]
+#         node.prev.next = node.next
+#         node.next.prev = node.prev
+#
+#     # 加在链表尾
+#     def add(self, node):
+#         self.lookup[node.key] = node
+#         pre_tail = self.tail.prev
+#         node.next = self.tail
+#         self.tail.prev = node
+#         pre_tail.next = node
+#         node.prev = pre_tail
+#
+#
+# # Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(2)
+# print(obj.get(1))
+# obj.put(1,1)
+# obj.put(2,2)
+# print(obj.get(1))
+# obj.put(3,3)
+# print(obj.get(2))
+# obj.put(4,4)
+# print(obj.get(1))
+# print(obj.get(3))
+# print(obj.get(4))
 
-    def get(self, key):
-        """
-        :type key: int
-        :rtype: int
-        """
-
-
-    def put(self, key, value):
-        """
-        :type key: int
-        :type value: int
-        :rtype: None
-        """
-
-# Your LRUCache object will be instantiated and called as such:
-# obj = LRUCache(capacity)
-# param_1 = obj.get(key)
-# obj.put(key,value)
 
 # # ############################### 147. 对链表进行插入排序 ###############################
 # x = stringToListNode('[4,2,1,3]')
+# x = stringToListNode('[3,5,6,1,8,7,2,4]')
 # x = stringToListNode('[1,5,3,4,0]')
+# # x = stringToListNode('[1]')
 #
 #
 # class Solution(object):
@@ -405,6 +489,7 @@ class LRUCache(object):
 #         :type head: ListNode
 #         :rtype: ListNode
 #         """
+#         # O(N^2)
 #         if not (head and head.next):
 #             return head
 #         dummy = ListNode(0)
@@ -412,26 +497,38 @@ class LRUCache(object):
 #         p = head.next
 #         pre = head
 #         while p:
-#             pass
+#             if p.val >= pre.val:
+#                 p = p.next
+#                 pre = pre.next
+#                 continue
+#             else:
+#                 pre.next = p.next
+#                 tmp = dummy
+#                 while tmp.next and p.val > tmp.next.val:
+#                     tmp = tmp.next
+#                 p.next = tmp.next
+#                 tmp.next = p
+#                 p = pre.next
+#         return dummy.next
 #
 #
 # solve = Solution()
 # printList(solve.insertionSortList(x))
 
 # # ############################### 148. 排序链表 ###############################
-# # O(n log n) 时间复杂度和常数级空间复杂度
-#
-#
-# class Solution(object):
-#     def sortList(self, head):
-#         """
-#         :type head: ListNode
-#         :rtype: ListNode
-#         """
-#
-#
-# solve = Solution()
-# printList(solve.sortList(x))
+# O(n log n) 时间复杂度和常数级空间复杂度
+
+
+class Solution(object):
+    def sortList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+
+
+solve = Solution()
+printList(solve.sortList(x))
 
 # ############################### 149. 直线上最多的点数 ###############################
 # x = [[1,1],[2,2],[3,3]]     # 3
