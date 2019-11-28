@@ -726,3 +726,322 @@ printList(solve.sortList(x))
 #
 # solve = Solution()
 # print(solve.evalRPN(x))
+
+# ############################### 151. 翻转字符串里的单词 ###############################
+# s = "the sky is blue"       # "blue is sky the"
+# # s = "  hello world!  "      # "world! hello"
+# # s = "a good   example"      # "example good a"
+# s = ' '
+#
+#
+# class Solution:
+#     def reverseWords(self, s: str) -> str:
+#         # lis = s.split()
+#         # return " ".join(lis[::-1])
+#
+#         s = s.strip()
+#         res = ''
+#         i = 0
+#         flag = 0
+#         tmp = ''
+#         while i < len(s):
+#             if s[i] == ' ':
+#                 res = tmp + ' ' + res
+#                 tmp = ''
+#                 flag = 1 - flag
+#                 i += 1
+#                 while s[i] == ' ':
+#                     i += 1
+#             else:
+#                 tmp += s[i]
+#                 i += 1
+#         return (tmp + ' ' + res)[:-1]
+#
+#
+# solve = Solution()
+# print(solve.reverseWords(s))
+
+# ############################### 152. 乘积最大子序列 ###############################
+x = [2,3,-2,4]          # 6
+x = [-2,0,-1]           # 0
+x = [2,3,-2,4,-2]       # 96
+x = [2,3,-2,4,-2,-2]    # 96
+# x = [1,-2,0]           # 1
+# x = [2,0]           # 0
+# x = [0,2]           # 0
+# x = [0,-2]           # 0
+# x = [-2,0]           # 0
+# x = [-5,0,2]           # 0
+
+
+class Solution:
+    # # 想法是先在0处断链,然后在每个子列表中找到负数,
+    # # 如果负数数量为偶数个,因为都是整数,最大就是所有数乘起来,
+    # # 如果是奇数个,那就是 第0个数到最后一个负数前的乘积 和 第一个负数后到最后一个数的乘积 中较大者
+    # # 虽然代码写了很多,但时间复杂度还可以
+    # def product(self, nums):
+    #     if not nums:
+    #         return 0
+    #     res = 1
+    #     for ele in nums:
+    #         res *= ele
+    #     return res
+    #
+    # def maxProduct(self, nums):
+    #     if not nums:
+    #         return 0
+    #     elif len(nums) == 1:
+    #         return nums[0]
+    #     res = 0
+    #     start = 0
+    #     new_nums = []
+    #     negatives = []
+    #     tmp_negatives = []
+    #     tmp_nums = []
+    #     for i in range(len(nums)):
+    #         if nums[i] == 0:
+    #             if i == 0:
+    #                 start = 1
+    #                 continue
+    #             else:
+    #                 new_nums.append(tmp_nums)
+    #                 tmp_nums = []
+    #                 start = i + 1
+    #                 negatives.append(tmp_negatives)
+    #                 tmp_negatives = []
+    #                 continue
+    #         elif nums[i] < 0:
+    #             tmp_negatives.append(i - start)
+    #         tmp_nums.append(nums[i])
+    #     new_nums.append(tmp_nums)
+    #     negatives.append(tmp_negatives)
+    #
+    #     for i, lis_num in enumerate(new_nums):
+    #         if len(negatives[i]) % 2:
+    #             res = max(res, self.product(lis_num[:negatives[i][-1]]), self.product(lis_num[(negatives[i][0]+1):]))
+    #         else:
+    #             res = max(res, self.product(lis_num))
+    #     return res
+
+    def maxProduct(self, nums) -> int:
+        # # 这感觉像暴力法..
+        # # or 1 的作用是如果碰到0就重新开始
+        # reverse_nums = nums[::-1]
+        # for i in range(1, len(nums)):
+        #     nums[i] *= nums[i - 1] or 1
+        #     reverse_nums[i] *= reverse_nums[i - 1] or 1
+        # return max(nums + reverse_nums)
+
+        # 由于可能有负数,所以动态规划每一步记住当前最小和最大
+        if not nums: return
+        res = nums[0]
+        pre_max = nums[0]
+        pre_min = nums[0]
+        for num in nums[1:]:
+            cur_max = max(pre_max * num, pre_min * num, num)
+            cur_min = min(pre_max * num, pre_min * num, num)
+            res = max(res, cur_max)
+            pre_max = cur_max
+            pre_min = cur_min
+        return res
+
+
+solve = Solution()
+print(solve.maxProduct(x))
+
+# ########################### 153. 寻找旋转排序数组中的最小值 ##########################
+# x = [3,4,5,1,2]         # 1
+# x = [4,5,6,7,0,1,2]     # 0
+# x = [1,2,3]     # 0
+#
+#
+# class Solution:
+#     def findMin(self, nums) -> int:
+#         # if not nums:
+#         #     return 0
+#         #
+#         # def sub_solver(nums):
+#         #     n = len(nums)
+#         #     if n == 0:
+#         #         return float('inf')
+#         #     elif n == 1:
+#         #         return nums[0]
+#         #     mid = n // 2
+#         #     if nums[0] > nums[mid]:
+#         #         res = min(sub_solver(nums[:mid]), nums[mid])
+#         #     else:
+#         #         res = min(sub_solver(nums[mid+1:]), nums[0])
+#         #     return res
+#         #
+#         # return sub_solver(nums)
+#
+#
+#         left = 0
+#         right = len(nums) - 1
+#         while left < right:
+#             mid = left + (right - left) // 2
+#             if nums[right] < nums[mid]:
+#                 left = mid + 1
+#             else:
+#                 right = mid
+#         return nums[left]
+#
+#
+# solve = Solution()
+# print(solve.findMin(x))
+
+# ########################### 154. 寻找旋转排序数组中的最小值 II ##########################
+# # 允许重复
+# x = [3,1,3,3,3,3,3]         # 1
+# # x = [2,2,2,0,1]     # 0
+#
+#
+# class Solution:
+#     def findMin(self, nums) -> int:
+#         if not nums:
+#             return 0
+#
+#         def sub_solver(nums):
+#             n = len(nums)
+#             if n == 0:
+#                 return float('inf')
+#             elif n == 1:
+#                 return nums[0]
+#             mid = n // 2
+#             if nums[0] > nums[mid]:
+#                 res = min(sub_solver(nums[:mid]), nums[mid])
+#             elif nums[0] < nums[mid]:
+#                 res = min(sub_solver(nums[mid + 1:]), nums[0])
+#             else:
+#                 res = min(sub_solver(nums[mid + 1:]), sub_solver(nums[:mid]))
+#             return res
+#
+#         return sub_solver(nums)
+#
+#         # left = 0
+#         # right = len(nums) - 1
+#         # while left < right:
+#         #     mid = left + (right - left) // 2
+#         #     if nums[mid] > nums[right]:
+#         #         left = mid + 1
+#         #     elif nums[mid] < nums[right]:
+#         #         right = mid
+#         #     else:
+#         #         right -= 1
+#         # return nums[left]
+#
+#
+# solve = Solution()
+# print(solve.findMin(x))
+
+# ############################### 155. 最小栈 ###############################
+# class MinStack:
+#     # 一个栈,但在存最小值时,把之前的最小值先存进stack中,弹出的时候多弹一个
+#     def __init__(self):
+#         """
+#         initialize your data structure here.
+#         """
+#         self.stack = []
+#         self.min_val = float('inf')
+#
+#     def push(self, x: int) -> None:
+#         if x <= self.min_val:
+#             self.stack.append(self.min_val)
+#             self.min_val = x
+#         self.stack.append(x)
+#
+#     def pop(self) -> None:
+#         if self.stack.pop() == self.min_val:
+#             self.min_val = self.stack.pop()
+#
+#     def top(self) -> int:
+#         return self.stack[-1]
+#
+#     def getMin(self) -> int:
+#         return self.min_val
+
+    # # 用两个栈实现,一个存当前最小
+    # def __init__(self):
+    #     """
+    #     initialize your data structure here.
+    #     """
+    #     self.stack = []
+    #     self.min_num = []
+    #
+    # def push(self, x: int) -> None:
+    #     self.stack.append(x)
+    #     if len(self.min_num) == 0 or self.min_num[-1] >= x:
+    #         self.min_num.append(x)
+    #
+    # def pop(self) -> None:
+    #     if self.stack:
+    #         tmp = self.stack.pop()
+    #         if self.min_num[-1] == tmp:
+    #             self.min_num.pop()
+    #         return tmp
+    #
+    # def top(self) -> int:
+    #     if self.stack:
+    #         return self.stack[-1]
+    #
+    # def getMin(self) -> int:
+    #     return self.min_num[-1]
+
+
+# Your MinStack object will be instantiated and called as such:
+# obj = MinStack()
+# obj.push(x)
+# obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.getMin()
+
+# ############################### 160. 相交链表 ###############################
+# a = stringToListNode("[4,1]")
+# b = stringToListNode("[5,0,1]")
+# c = stringToListNode("[8,4,5]")
+# a.next.next = c
+# b.next.next.next = c        # [8,4,5]
+#
+#
+# class Solution:
+#     def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> ListNode:
+#         # # 利用哈希表存储,这里想节省遍历时间,于是两个链表一起遍历
+#         # rem = set()
+#         # pa = headA
+#         # pb = headB
+#         # res = None
+#         # while pa and pb:
+#         #     if pa in rem:
+#         #         res = pa
+#         #         break
+#         #     rem.add(pa)
+#         #     if pb in rem:
+#         #         res = pb
+#         #         break
+#         #     rem.add(pb)
+#         #     pa = pa.next
+#         #     pb = pb.next
+#         # if not res:
+#         #     while pa:
+#         #         if pa in rem:
+#         #             res = pa
+#         #             break
+#         #         pa = pa.next
+#         #     while pb:
+#         #         if pb in rem:
+#         #             res = pb
+#         #             break
+#         #         pb = pb.next
+#         # return res
+#
+#         # 双指针法,一个指针遍历完后,转到另一个链表头,这样,两个指针遍历的长度均为(l1+l2),所以必然相遇
+#         # 相遇时,有值就是相遇点;无值便为无相遇点
+#         p, q = headA, headB
+#         while p != q:
+#             p = p.next if p else headB
+#             q = q.next if q else headA
+#         return p
+#
+#
+# solve = Solution()
+# printList(solve.getIntersectionNode(a, b))
