@@ -241,13 +241,16 @@ denominator = 7     # '0.(285714)'
 numerator = 1
 denominator = 6     # '0.1(6)'
 
+numerator = 7
+denominator = -12     # '0.1(6)'
+
 
 class Solution:
     def fractionToDecimal(self, numerator: int, denominator: int) -> str:
         if numerator % denominator == 0:
             return str(numerator // denominator)
         flag = 0
-        if (numerator < 0 and denominator > 0) or (numerator < 0 and denominator > 0):
+        if (numerator < 0 and denominator > 0) or (numerator > 0 and denominator < 0):
             flag = 1
         numerator = abs(numerator)
         denominator = abs(denominator)
