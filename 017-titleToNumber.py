@@ -287,14 +287,32 @@ class BSTIterator:
 # ############################### 179. 最大数 ###############################
 x = [10,2]          # 210
 x = [3,30,34,5,9]   # 9534330
+x = [0,0]          # 210
 
 
 class Solution:
     def largestNumber(self, nums) -> str:
         lis = [str(i) for i in nums]
-        lis.sort(reverse=True)
+        # 自定义排序
+        for i in range(1, len(lis)):
+            for j in range(1, len(lis) - i + 1):
+                if lis[j]+lis[j-1] > lis[j-1]+lis[j]:
+                    lis[j], lis[j - 1] = lis[j - 1], lis[j]
         res = ''.join(lis)
-        return int(res)
+        if res[0] == '0':
+            return '0'
+        else:
+            return str(res)
+
+# #　这样写类的方法很神奇..
+# class LargerNumKey(str):
+#     def __lt__(x, y):
+#         return x + y > y + x
+#
+# class Solution:
+#     def largestNumber(self, nums):
+#         largest_num = ''.join(sorted(map(str, nums), key=LargerNumKey))
+#         return '0' if largest_num[0] == '0' else largest_num
 
 
 solve = Solution()
