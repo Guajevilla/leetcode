@@ -183,36 +183,39 @@ def stringToTreeNode(input):
 # 173. 二叉搜索树迭代器
 # next() 和 hasNext() 操作的时间复杂度是 O(1)，并使用 O(h) 内存，其中 h 是树的高度。
 # 你可以假设 next() 调用总是有效的，也就是说，当调用 next() 时，BST 中至少存在一个下一个最小的数。
-root = stringToTreeNode('[7,3,15,null,null,9,20]')
+root = stringToTreeNode('[7,3,15,null,null,9,20,8,10]')
+root = stringToTreeNode('[7,3,15,null,null,9,20,null,10]')
 prettyPrintTree(root)
 
 
 class BSTIterator:
     #  要求 O(h) 内存,所以不能中序遍历,可以采用莫里斯遍历
+    # 这里采用的是用栈模拟,每次存左子树
     def __init__(self, root: TreeNode):
         self.root = root
-        self.stack = [root]
-        # tmp = [root.val]
-        while self.stack[-1].left:
-            # tmp.append(self.stack[-1].left.val)
-            self.stack.append(self.stack[-1].left)
-        # print(tmp)
+        if not root:
+            self.stack = []
+        else:
+            self.stack = [root]
+            while self.stack[-1].left:
+                self.stack.append(self.stack[-1].left)
 
     def next(self) -> int:
         """
         @return the next smallest number
         """
+        # 这里虽然加入了循环在里面,但时间复杂度还是符合O(1)
+        # 仔细分析一下，该循环只有在节点有右子树的时候才需要进行，也就是不是每一次操作都需要循环的
+        # 循环的次数加上初始化的循环总共会有O(n)次操作
+        # 均摊到每一次next()的话平均时间复杂度则是O(n) / n = O(1),因此可以确定该实现方式满足O(1)的要求。
+        # 这种分析方式称为摊还分析，详细的学习可以看看 《算法导论》- 第17章 摊还分析
         if not self.stack[-1].right:
             tmp = self.stack.pop()
-            if self.stack:
-                self.stack[-1].left = None
-        elif not self.stack[-1].left:
+        else:
             tmp = self.stack.pop()
             self.stack.append(tmp.right)
-        else:
-            # 这里的问题在于其实是需要遍历左子树的,还涉及到后面的右子树
-            tmp = self.stack[-1].left
-            self.stack[-1].left = None
+            while self.stack[-1].left:
+                self.stack.append(self.stack[-1].left)
 
         return tmp.val
 
@@ -223,17 +226,17 @@ class BSTIterator:
         return len(self.stack) > 0
 
 
-obj = BSTIterator(root)
-print(obj.next())       # 3
-print(obj.hasNext())    # T
-print(obj.next())       # 7
-print(obj.hasNext())    # T
-print(obj.next())       # 9
-print(obj.hasNext())    # T
-print(obj.next())       # 15
-print(obj.hasNext())    # T
-print(obj.next())       # 20
-print(obj.hasNext())    # F
+# obj = BSTIterator(root)
+# print(obj.next())       # 3
+# print(obj.hasNext())    # T
+# print(obj.next())       # 7
+# print(obj.hasNext())    # T
+# print(obj.next())       # 9
+# print(obj.hasNext())    # T
+# print(obj.next())       # 15
+# print(obj.hasNext())    # T
+# print(obj.next())       # 20
+# print(obj.hasNext())    # F
 
 # ############################### 174. 地下城游戏 ###############################
 # x = [[-2,-3, 3],
@@ -279,4 +282,20 @@ print(obj.hasNext())    # F
 # solve = Solution()
 # print(solve.calculateMinimumHP(x))
 
-# ############################### 174. 地下城游戏 ###############################
+# ############################### 175. 组合两个表 ###############################
+# 数据库题 跳过
+# ############################### 179. 最大数 ###############################
+x = [10,2]          # 210
+x = [3,30,34,5,9]   # 9534330
+
+
+class Solution:
+    def largestNumber(self, nums) -> str:
+        lis = [str(i) for i in nums]
+        lis.sort(reverse=True)
+        res = ''.join(lis)
+        return int(res)
+
+
+solve = Solution()
+print(solve.largestNumber(x))
