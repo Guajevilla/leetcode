@@ -206,79 +206,224 @@ import math
 # print(solve.compareVersion(version1, version2))
 
 # ############################### 166. 分数到小数 ###############################
-# 以字符串形式返回小数
-# 如果小数部分为循环小数，则将循环的部分括在括号内。
-numerator = 1
-denominator = 2     # '0.5'
-
-# numerator = 0
-# denominator = 1     # '0'
-
-# numerator = 20
-# denominator = 4     # '5'
+# # 以字符串形式返回小数
+# # 如果小数部分为循环小数，则将循环的部分括在括号内。
+# numerator = 1
+# denominator = 2     # '0.5'
 #
-# numerator = -1
-# denominator = 4     # '-0.25'
-
-# numerator = -1
-# denominator = -4    # '0.25'
-
-numerator = -2147483648
-denominator = -1    # '2'
-
-numerator = 2
-denominator = 1     # '2'
-
-numerator = 2
-denominator = 3     # '0.(6)'
-
-numerator = 2
-denominator = 23     # '0.(0869565217391304347826)'
+# # numerator = 0
+# # denominator = 1     # '0'
 #
-numerator = 2
-denominator = 7     # '0.(285714)'
+# # numerator = 20
+# # denominator = 4     # '5'
+# #
+# # numerator = -1
+# # denominator = 4     # '-0.25'
 #
-numerator = 1
-denominator = 6     # '0.1(6)'
+# # numerator = -1
+# # denominator = -4    # '0.25'
+#
+# numerator = -2147483648
+# denominator = -1    # '2'
+#
+# numerator = 2
+# denominator = 1     # '2'
+#
+# numerator = 2
+# denominator = 3     # '0.(6)'
+#
+# numerator = 2
+# denominator = 23     # '0.(0869565217391304347826)'
+# #
+# numerator = 2
+# denominator = 7     # '0.(285714)'
+# #
+# numerator = 1
+# denominator = 6     # '0.1(6)'
+#
+# numerator = 7
+# denominator = -12     # '0.1(6)'
+#
+#
+# # 在余数中找重复的
+# class Solution:
+#     def fractionToDecimal(self, numerator: int, denominator: int) -> str:
+#         # if numerator % denominator == 0:
+#         #     return str(numerator // denominator)
+#         # flag = 0
+#         # if (numerator < 0 and denominator > 0) or (numerator > 0 and denominator < 0):
+#         #     flag = 1
+#         # numerator = abs(numerator)
+#         # denominator = abs(denominator)
+#         # integer = numerator // denominator
+#         # decimal = ''
+#         # new_numerator = {}
+#         # new_numerator[0] = None
+#         # cnt = 0
+#         # while numerator % denominator not in new_numerator:
+#         #     tmp = numerator % denominator
+#         #     new_numerator[tmp] = cnt
+#         #     cnt += 1
+#         #     numerator = 10 * tmp
+#         #     decimal += str(numerator // denominator)
+#         # tmp = numerator % denominator
+#         # if new_numerator[tmp] == None:
+#         #     res = str(integer) + '.' + decimal
+#         # elif new_numerator[tmp] == 0:
+#         #     res = str(integer) + '.(' + decimal + ')'
+#         # else:
+#         #     ind = new_numerator[tmp]
+#         #     res = str(integer) + '.' + decimal[:ind] + '(' + decimal[ind:] + ')'
+#         #
+#         # if flag:
+#         #     res = '-' + res
+#         # return res
+#
+#
+#         if numerator == 0: return "0"
+#         res = []
+#         # 首先判断结果正负, 异或作用就是 两个数不同 为 True 即 1 ^ 0 = 1 或者 0 ^ 1 = 1
+#         if (numerator > 0) ^ (denominator > 0):
+#             res.append("-")
+#         numerator, denominator = abs(numerator), abs(denominator)
+#         # 判读到底有没有小数
+#         a, b = divmod(numerator, denominator)
+#         res.append(str(a))
+#         # 无小数
+#         if b == 0:
+#             return "".join(res)
+#         res.append(".")
+#         # 处理余数
+#         # 把所有出现过的余数记录下来
+#         loc = {b: len(res)}
+#         while b:
+#             b *= 10
+#             a, b = divmod(b, denominator)
+#             res.append(str(a))
+#             # 余数前面出现过,说明开始循环了,加括号
+#             if b in loc:
+#                 res.insert(loc[b], "(")
+#                 res.append(")")
+#                 break
+#             # 在把该位置的记录下来
+#             loc[b] = len(res)
+#         return "".join(res)
+#
+#
+# solve = Solution()
+# print(solve.fractionToDecimal(numerator, denominator))
 
-numerator = 7
-denominator = -12     # '0.1(6)'
+# ############################ 167. 两数之和 II - 输入有序数组 ############################
+# numbers = [2, 7, 11, 15]
+# target = 9
+#
+#
+# class Solution:
+#     def twoSum(self, numbers, target):
+#         # # 双指针
+#         # l = 0
+#         # r = len(numbers) - 1
+#         # while l < r:
+#         #     if numbers[l] + numbers[r] == target:
+#         #         return [l + 1, r + 1]
+#         #     elif numbers[l] + numbers[r] > target:
+#         #         r -= 1
+#         #     else:
+#         #         l += 1
+#
+#         # 哈希表法
+#         dic = {}
+#         for i in range(len(numbers)):
+#             if numbers[i] in dic:
+#                 return [dic[numbers[i]] + 1, i + 1]
+#             else:
+#                 dic[target - numbers[i]] = i
+#
+#
+# solve = Solution()
+# print(solve.twoSum(numbers, target))
 
+# ############################### 168. Excel表列名称 ###################################
+# x = 1       # A
+# x = 28      # AB
+# x = 701     # ZY
+# x = 702     # ZZ
+# x = 2030    # BZB
+#
+#
+# class Solution:
+#     def convertToTitle(self, n: int) -> str:
+#         res = ''
+#         a = n
+#         while a:
+#             a, b = divmod(a, 26)
+#             if b == 0:
+#                 res = 'Z' + res
+#                 a -= 1
+#             else:
+#                 res = chr(b + 64) + res
+#
+#         return res
+#
+#         # 这个题目有坑
+#         # 坑在不是从0开始,而是从1开始
+#         # 所以如果要用进制转换的思路来解决的话，在处理每一位的时候要把当前的位进行减1操作。
+#         # res = ""
+#         # while n:
+#         #     n -= 1
+#         #     n, y = divmod(n, 26)
+#         #     res = chr(y + 65) + res
+#         # return res
+#
+#         # 递归写法
+#         return "" if n == 0 else self.convertToTitle((n - 1) // 26) + chr((n - 1) % 26 + 65)
+#
+#
+# solve = Solution()
+# print(solve.convertToTitle(x))
 
-class Solution:
-    def fractionToDecimal(self, numerator: int, denominator: int) -> str:
-        if numerator % denominator == 0:
-            return str(numerator // denominator)
-        flag = 0
-        if (numerator < 0 and denominator > 0) or (numerator > 0 and denominator < 0):
-            flag = 1
-        numerator = abs(numerator)
-        denominator = abs(denominator)
-        integer = numerator // denominator
-        decimal = ''
-        new_numerator = {}
-        new_numerator[0] = None
-        cnt = 0
-        while numerator % denominator not in new_numerator:
-            tmp = numerator % denominator
-            new_numerator[tmp] = cnt
-            cnt += 1
-            numerator = 10 * tmp
-            decimal += str(numerator // denominator)
-        tmp = numerator % denominator
-        if new_numerator[tmp] == None:
-            res = str(integer) + '.' + decimal
-        elif new_numerator[tmp] == 0:
-            res = str(integer) + '.(' + decimal + ')'
-        # elif new_numerator[tmp] != 0:
-        else:
-            ind = new_numerator[tmp]
-            res = str(integer) + '.' + decimal[:ind] + '(' + decimal[ind:] + ')'
-
-        if flag:
-            res = '-' + res
-        return res
-
-
-solve = Solution()
-print(solve.fractionToDecimal(numerator, denominator))
+# ############################### 169. 多数元素 ###################################
+# x = [3,2,3]         # 3
+# # x = [2,2,1,1,1,2,2] # 2
+# x = [1, 1]
+#
+#
+# class Solution:
+#     def majorityElement(self, nums):
+#         if len(nums) <= 2:
+#             return nums[0]
+#         dic = {}
+#         half_length = len(nums) // 2
+#         for num in nums:
+#             if num in dic:
+#                 dic[num] += 1
+#                 if dic[num] > half_length:
+#                     return num
+#             else:
+#                 dic[num] = 1
+#
+#         # 还能用排序的思想..一半的地方必定是多数元素
+#         nums.sort()
+#         return nums[len(nums)//2]
+#
+#         # BM投票法,res为候选,若count为0,将当前设为候选
+#         # 若当前数与候选相同,count+=1;反之count-=1
+#         # 这样相当于保证了每一段众数与其他数的数量相同
+#         n = len(nums)
+#         res = 0
+#         count = 0
+#         for i in range(n):
+#             if count == 0:
+#                 res = nums[i]
+#                 count = 1
+#             else:
+#                 if nums[i] == res:
+#                     count += 1
+#                 else:
+#                     count -= 1
+#         if count > 0:
+#             return res
+#
+#
+# solve = Solution()
+# print(solve.majorityElement(x))
