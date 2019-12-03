@@ -331,3 +331,66 @@ class Solution:
 
 solve = Solution()
 print(solve.isIsomorphic(s, t))
+
+# ############################### 206. 反转链表 ###############################
+# 可用迭代或递归
+x = stringToListNode('[1,2]')
+# x = stringToListNode('[]')
+
+
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        # # 迭代
+        # stack = []
+        # dummy = ListNode(0)
+        # while head:
+        #     stack.append(head)
+        #     head = head.next
+        #
+        # p = dummy
+        # while stack:
+        #     p.next = stack.pop()
+        #     p = p.next
+        # p.next = None
+        # return dummy.next
+
+        # # 递归
+        # if not head:
+        #     return head
+        # res = [None]
+        #
+        # def sub_solver(head):
+        #     if not head.next:
+        #         res[0] = head
+        #         return head
+        #     tmp = sub_solver(head.next)
+        #     tmp.next = head
+        #     return head
+        #
+        # sub_solver(head).next = None
+        # return res[0]
+
+        # 别人的递归
+        if not head or not head.next: return head
+        new_head = self.reverseList(head.next)
+        next_node = head.next
+        next_node.next = head
+        head.next = None
+        return new_head
+
+        # 别人的迭代
+        prev = None
+        cur = head
+        while cur:
+            # 保持下一个节点
+            nxt = cur.next
+            # 翻转
+            cur.next = prev
+            # 进行下一个
+            prev = cur
+            cur = nxt
+        return prev
+
+
+solve = Solution()
+printList(solve.reverseList(x))
