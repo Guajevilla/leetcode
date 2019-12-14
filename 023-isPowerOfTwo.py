@@ -130,7 +130,7 @@ def stringToTreeNode(input):
     return root
 
 
-# ############################### 230. 二叉搜索树中第K小的元素 #################################
+# ############################### 231. 2的幂 #################################
 # x = 1
 # x = 16
 # # x = 218
@@ -403,24 +403,81 @@ x = stringToListNode('[1,11,11,1]')
 # print(solve.maxSlidingWindow(nums, k))
 
 # ############################## 240. 搜索二维矩阵 II ################################
-# matrix = [
-#   [1,   4,  7, 11, 15],
-#   [2,   5,  8, 12, 19],
-#   [3,   6,  9, 16, 22],
-#   [10, 13, 14, 17, 24],
-#   [18, 21, 23, 26, 30]]
-# target = 5          # T
-# target = 20         # F
-#
-#
-# class Solution:
-#     def searchMatrix(self, matrix, target):
-#         """
-#         :type matrix: List[List[int]]
-#         :type target: int
-#         :rtype: bool
-#         """
-#
-#
-# solve = Solution()
-# print(solve.searchMatrix(matrix, target))
+matrix = [
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]]
+target = 5          # T
+target = 20         # F
+
+matrix = [[20]]
+target = 5          # T
+target = 20         # F
+
+
+class Solution:
+    def search_lis(self, lis, target):
+        n = len(lis)
+        i = 0
+        j = n - 1
+        while i <= j:
+            mid = (j + i) // 2
+            if lis[mid] == target:
+                return True
+            elif lis[mid] > target:
+                j = mid - 1
+            else:
+                i = mid + 1
+        return False
+
+    def searchMatrix(self, matrix, target):
+        """
+        :type matrix: List[List[int]]
+        :type target: int
+        :rtype: bool
+        """
+        if not matrix or not matrix[0]:
+            return False
+        for lis in matrix:
+            if lis[0] <= target <= lis[-1]:
+                if self.search_lis(lis, target):
+                    return True
+            elif target < lis[0]:
+                break
+        return False
+
+
+class Solution1:
+    # O(m+n)的修建法,从左下角位置出发
+    # 如果当前元素大于target->上移
+    # 如果当前元素小于target->右移
+    # 直到找到元素或者超出索引
+    def searchMatrix(self, matrix, target):
+        # an empty matrix obviously does not contain `target` (make this check
+        # because we want to cache `width` for efficiency's sake)
+        if len(matrix) == 0 or len(matrix[0]) == 0:
+            return False
+
+        # cache these, as they won't change.
+        height = len(matrix)
+        width = len(matrix[0])
+
+        # start our "pointer" in the bottom-left
+        row = height - 1
+        col = 0
+
+        while col < width and row >= 0:
+            if matrix[row][col] > target:
+                row -= 1
+            elif matrix[row][col] < target:
+                col += 1
+            else:  # found it
+                return True
+
+        return False
+
+
+solve = Solution()
+print(solve.searchMatrix(matrix, target))

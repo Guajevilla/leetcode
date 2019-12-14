@@ -834,6 +834,5 @@ class Solution:
         return container.pop()
 
 
-
 solve = Solution()
 print(solve.kthSmallest(x, k))
