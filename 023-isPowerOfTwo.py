@@ -212,41 +212,60 @@ def stringToTreeNode(input):
 # print(obj.empty())
 
 # ############################### 233. 数字 1 的个数 #################################
-x = 13          # 6  (1, 10, 11, 12, 13)
-x = 130         # 64
-
-
-class Solution:
-    def countDigitOne(self, n: int) -> int:
-        if n <= 0:
-            return 0
-        if n < 10:
-            return 1
-        res = 0
-
-
-        # cnt, i = 0, 1
-        # while i <= n:  # i 依次个十百位的算，直到大于 n 为止。
-        #     cnt += n // (i * 10) * i + min(max(n % (i * 10) - i + 1, 0), i)
-        #     i *= 10
-        # return cnt
-
-
-        # if n <= 0:
-        #     return 0
-        # if n < 10:
-        #     return 1
-        # last = int(str(n)[1:])
-        # power = 10 ** (len(str(n)) - 1)
-        # high = int(str(n)[0])
-        # if high == 1:
-        #     return self.countDigitOne(last) + self.countDigitOne(power - 1) + last + 1
-        # else:
-        #     return power + high * self.countDigitOne(power - 1) + self.countDigitOne(last);
-
-
-solve = Solution()
-print(solve.countDigitOne(x))
+# x = 13          # 6  (1, 10, 11, 12, 13)
+# x = 130         # 64
+# x = 110         # 33
+# # x = 111         # 36
+# # x = 121         # 55
+# # x = 1100        # 422
+# # x = 1111        # 448
+#
+#
+# class Solution:
+#     # 找规律..
+#     def countDigitOne(self, n: int) -> int:
+#         if n <= 0:
+#             return 0
+#         res = 0
+#         rem = n
+#         i = 1
+#         while n // 10 > 0:
+#             tmp = n % 10
+#             res += n // 10 * i
+#             if tmp > 1:
+#                 res += i
+#             elif tmp == 1:
+#                 res += rem % i + 1
+#             n = n // 10
+#             i *= 10
+#         if n == 1:
+#             res += rem - i + 1
+#         else:
+#             res += i
+#         return res
+#
+#         # cnt, i = 0, 1
+#         # while i <= n:  # i 依次个十百位的算，直到大于 n 为止。
+#         #     cnt += n // (i * 10) * i + min(max(n % (i * 10) - i + 1, 0), i)
+#         #     i *= 10
+#         # return cnt
+#
+#
+#         # if n <= 0:
+#         #     return 0
+#         # if n < 10:
+#         #     return 1
+#         # last = int(str(n)[1:])
+#         # power = 10 ** (len(str(n)) - 1)
+#         # high = int(str(n)[0])
+#         # if high == 1:
+#         #     return self.countDigitOne(last) + self.countDigitOne(power - 1) + last + 1
+#         # else:
+#         #     return power + high * self.countDigitOne(power - 1) + self.countDigitOne(last);
+#
+#
+# solve = Solution()
+# print(solve.countDigitOne(x))
 
 # ############################### 234. 回文链表 #################################
 # 要求O(n) 时间复杂度和 O(1) 空间复杂度
@@ -318,6 +337,12 @@ x = stringToListNode('[1,11,11,1]')
 #
 # class Solution:
 #     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+#         if p.val < root.val and q.val < root.val:
+#             return self.lowestCommonAncestor(root.left, p, q)
+#         elif p.val > root.val and q.val > root.val:
+#             return self.lowestCommonAncestor(root.right, p, q)
+#
+#         return root
 #
 #
 # solve = Solution()
@@ -328,13 +353,157 @@ x = stringToListNode('[1,11,11,1]')
 # p = x.left
 # q = x.right     # 3
 #
-# x = stringToTreeNode('[3,5,1,6,2,0,8,null,null,7,4]')
-# p = x.left
-# q = x.left.right.right     # 5
+# # x = stringToTreeNode('[3,5,1,6,2,0,8,null,null,7,4]')
+# # p = x.left
+# # q = x.left.right.right     # 5
 #
 #
 # class Solution:
 #     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+#         order = []
+#         ind = [0, 0]
+#
+#         def in_order(root):
+#             if not root:
+#                 return
+#             in_order(root.left)
+#             order.append(root.val)
+#             if root.val == p.val:
+#                 ind[0] = len(order) - 1
+#             elif root.val == q.val:
+#                 ind[1] = len(order) - 1
+#             in_order(root.right)
+#
+#         in_order(root)
+#         ind.sort()
+#         i = order.index(root.val)
+#         while ind[0] > i or i > ind[1]:
+#             if i > ind[1]:
+#                 root = root.left
+#             elif i < ind[0]:
+#                 root = root.right
+#             i = order.index(root.val)
+#         return root
+#
+#
+#
+# class Solution1:
+#     # 递归深度遍历,当左右子树和当前节点三个中只要有2个出现了p和q,就说明当前节点是最近公共祖先
+#     # O(n)
+#     def __init__(self):
+#         # Variable to store LCA node.
+#         self.ans = None
+#
+#     def lowestCommonAncestor(self, root, p, q):
+#         """
+#         :type root: TreeNode
+#         :type p: TreeNode
+#         :type q: TreeNode
+#         :rtype: TreeNode
+#         """
+#         def recurse_tree(current_node):
+#
+#             # If reached the end of a branch, return False.
+#             if not current_node:
+#                 return False
+#
+#             # Left Recursion
+#             left = recurse_tree(current_node.left)
+#
+#             # Right Recursion
+#             right = recurse_tree(current_node.right)
+#
+#             # If the current node is one of p or q
+#             mid = current_node == p or current_node == q
+#
+#             # If any two of the three flags left, right or mid become True.
+#             if mid + left + right >= 2:
+#                 self.ans = current_node
+#
+#             # Return True if either of the three bool values is True.
+#             return mid or left or right
+#
+#         # Traverse the tree
+#         recurse_tree(root)
+#         return self.ans
+#
+#
+# class Solution2:
+#     # Three static flags to keep track of post-order traversal.
+#
+#     # Both left and right traversal pending for a node.
+#     # Indicates the nodes children are yet to be traversed.
+#     BOTH_PENDING = 2
+#     # Left traversal done.
+#     LEFT_DONE = 1
+#     # Both left and right traversal done for a node.
+#     # Indicates the node can be popped off the stack.
+#     BOTH_DONE = 0
+#
+#     def lowestCommonAncestor(self, root, p, q):
+#         """
+#         :type root: TreeNode
+#         :type p: TreeNode
+#         :type q: TreeNode
+#         :rtype: TreeNode
+#         """
+#         stack = [(root, Solution.BOTH_PENDING)]
+#
+#         # This flag is set when either one of p or q is found.
+#         one_node_found = False
+#
+#         # This is used to keep track of LCA index.
+#         LCA_index = -1
+#
+#         # We do a post order traversal of the binary tree using stack
+#         while stack:
+#             parent_node, parent_state = stack[-1]
+#
+#             # If the parent_state is not equal to BOTH_DONE,
+#             # this means the parent_node can't be popped of yet.
+#             if parent_state != Solution.BOTH_DONE:
+#
+#                 # If both child traversals are pending
+#                 if parent_state == Solution.BOTH_PENDING:
+#
+#                     # Check if the current parent_node is either p or q.
+#                     if parent_node == p or parent_node == q:
+#
+#                         # If one_node_found is set already, this means we have found both the nodes.
+#                         if one_node_found:
+#                             return stack[LCA_index][0]
+#                         else:
+#                             # Otherwise, set one_node_found to True,
+#                             # to mark one of p and q is found.
+#                             one_node_found = True
+#
+#                             # Save the current top index of stack as the LCA_index.
+#                             LCA_index = len(stack) - 1
+#
+#                     # If both pending, traverse the left child first
+#                     child_node = parent_node.left
+#                 else:
+#                     # traverse right child
+#                     child_node = parent_node.right
+#
+#                 # Update the node state at the top of the stack
+#                 # Since we have visited one more child.
+#                 stack.pop()
+#                 stack.append((parent_node, parent_state - 1))
+#
+#                 # Add the child node to the stack for traversal.
+#                 if child_node:
+#                     stack.append((child_node, Solution.BOTH_PENDING))
+#             else:
+#                 # If the parent_state of the node is both done,
+#                 # the top node could be popped off the stack.
+#
+#                 # i.e. If LCA_index is equal to length of stack. Then we decrease LCA_index by 1.
+#                 if one_node_found and LCA_index == len(stack) - 1:
+#                     LCA_index -= 1
+#                 stack.pop()
+#
+#         return None
 #
 #
 # solve = Solution()
@@ -390,94 +559,134 @@ x = stringToListNode('[1,11,11,1]')
 # print(solve.productExceptSelf(x))
 
 # ############################## 239. 滑动窗口最大值 ################################
-# # 要求线性时间复杂度
-# nums = [1,3,-1,-3,5,3,6,7]
-# k = 3               # [3,3,5,5,6,7]
-#
-#
-# class Solution:
-#     def maxSlidingWindow(self, nums: list[int], k: int) -> list[int]:
-#
-#
-# solve = Solution()
-# print(solve.maxSlidingWindow(nums, k))
+# 要求线性时间复杂度
+nums = [1,3,-1,-3,5,3,6,7]
+k = 3               # [3,3,5,5,6,7]
 
-# ############################## 240. 搜索二维矩阵 II ################################
-matrix = [
-  [1,   4,  7, 11, 15],
-  [2,   5,  8, 12, 19],
-  [3,   6,  9, 16, 22],
-  [10, 13, 14, 17, 24],
-  [18, 21, 23, 26, 30]]
-target = 5          # T
-target = 20         # F
+# nums = [1,-1]
+# k = 1               # [3,3,5,5,6,7]
 
-matrix = [[20]]
-target = 5          # T
-target = 20         # F
+nums = [7,1,3,-1,-3,5,3,6]
+k = 3               # [7,3,3,5,5,6]
 
 
 class Solution:
-    def search_lis(self, lis, target):
-        n = len(lis)
+    def maxSlidingWindow(self, nums, k):
+        # # 维护滑动窗口,使得滑动窗口内部是递减的,这样每次第一个数就是所求
+        # # 即,在加入新元素后,将窗口中所有小于该值的数弹出;
+        # # 将索引不在窗口内的数弹出,但这一操作依赖于索引,索引在维护窗口的时候,存的是数的索引
+        # rem = []
+        # res = []
+        # for i, num in enumerate(nums):
+        #     j = 0
+        #     while j < len(rem):
+        #         if nums[rem[j]] < num or rem[j] <= i - k:
+        #             rem.pop(j)
+        #         else:
+        #             j += 1
+        #     rem.append(i)
+        #     if i >= k - 1:
+        #         res.append(nums[rem[0]])
+        # return res
+
+        # 动态规划
+        if not nums: return []
+        n = len(nums)
+        left_max = [0] * n
+        left_max[0] = nums[0]
+        right_max = [0] * n
+        right_max[-1] = nums[-1]
+        res = []
+        for i in range(1, n):
+            left_max[i] = nums[i] if i % k == 0 else max(left_max[i - 1], nums[i])
+        for i in range(n - 2, -1, -1):
+            right_max[i] = nums[i] if i % k == 0 else max(right_max[i + 1], nums[i])
         i = 0
-        j = n - 1
-        while i <= j:
-            mid = (j + i) // 2
-            if lis[mid] == target:
-                return True
-            elif lis[mid] > target:
-                j = mid - 1
-            else:
-                i = mid + 1
-        return False
-
-    def searchMatrix(self, matrix, target):
-        """
-        :type matrix: List[List[int]]
-        :type target: int
-        :rtype: bool
-        """
-        if not matrix or not matrix[0]:
-            return False
-        for lis in matrix:
-            if lis[0] <= target <= lis[-1]:
-                if self.search_lis(lis, target):
-                    return True
-            elif target < lis[0]:
-                break
-        return False
-
-
-class Solution1:
-    # O(m+n)的修建法,从左下角位置出发
-    # 如果当前元素大于target->上移
-    # 如果当前元素小于target->右移
-    # 直到找到元素或者超出索引
-    def searchMatrix(self, matrix, target):
-        # an empty matrix obviously does not contain `target` (make this check
-        # because we want to cache `width` for efficiency's sake)
-        if len(matrix) == 0 or len(matrix[0]) == 0:
-            return False
-
-        # cache these, as they won't change.
-        height = len(matrix)
-        width = len(matrix[0])
-
-        # start our "pointer" in the bottom-left
-        row = height - 1
-        col = 0
-
-        while col < width and row >= 0:
-            if matrix[row][col] > target:
-                row -= 1
-            elif matrix[row][col] < target:
-                col += 1
-            else:  # found it
-                return True
-
-        return False
+        while i + k - 1 < n:
+            res.append(max(right_max[i], left_max[i + k - 1]))
+            i += 1
+        return res
 
 
 solve = Solution()
-print(solve.searchMatrix(matrix, target))
+print(solve.maxSlidingWindow(nums, k))
+
+# ############################## 240. 搜索二维矩阵 II ################################
+# matrix = [
+#   [1,   4,  7, 11, 15],
+#   [2,   5,  8, 12, 19],
+#   [3,   6,  9, 16, 22],
+#   [10, 13, 14, 17, 24],
+#   [18, 21, 23, 26, 30]]
+# target = 5          # T
+# target = 20         # F
+#
+# matrix = [[20]]
+# target = 5          # T
+# target = 20         # F
+#
+#
+# class Solution:
+#     def search_lis(self, lis, target):
+#         n = len(lis)
+#         i = 0
+#         j = n - 1
+#         while i <= j:
+#             mid = (j + i) // 2
+#             if lis[mid] == target:
+#                 return True
+#             elif lis[mid] > target:
+#                 j = mid - 1
+#             else:
+#                 i = mid + 1
+#         return False
+#
+#     def searchMatrix(self, matrix, target):
+#         """
+#         :type matrix: List[List[int]]
+#         :type target: int
+#         :rtype: bool
+#         """
+#         if not matrix or not matrix[0]:
+#             return False
+#         for lis in matrix:
+#             if lis[0] <= target <= lis[-1]:
+#                 if self.search_lis(lis, target):
+#                     return True
+#             elif target < lis[0]:
+#                 break
+#         return False
+#
+#
+# class Solution1:
+#     # O(m+n)的修建法,从左下角位置出发
+#     # 如果当前元素大于target->上移
+#     # 如果当前元素小于target->右移
+#     # 直到找到元素或者超出索引
+#     def searchMatrix(self, matrix, target):
+#         # an empty matrix obviously does not contain `target` (make this check
+#         # because we want to cache `width` for efficiency's sake)
+#         if len(matrix) == 0 or len(matrix[0]) == 0:
+#             return False
+#
+#         # cache these, as they won't change.
+#         height = len(matrix)
+#         width = len(matrix[0])
+#
+#         # start our "pointer" in the bottom-left
+#         row = height - 1
+#         col = 0
+#
+#         while col < width and row >= 0:
+#             if matrix[row][col] > target:
+#                 row -= 1
+#             elif matrix[row][col] < target:
+#                 col += 1
+#             else:  # found it
+#                 return True
+#
+#         return False
+#
+#
+# solve = Solution()
+# print(solve.searchMatrix(matrix, target))
