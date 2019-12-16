@@ -589,7 +589,10 @@ class Solution:
         #         res.append(nums[rem[0]])
         # return res
 
-        # 动态规划
+        # 动态规划,将整个nums分组,每k个一组
+        # 维护了一个left_max,存的是组内从左边第一个数到该数的最大值
+        # 维护了一个right_max,存的是组内从右边第一个数到该数的最大值
+        # 对于一个从i到j的滑动窗口,其最大值就是max(left_max[i], right_max[j])
         if not nums: return []
         n = len(nums)
         left_max = [0] * n
