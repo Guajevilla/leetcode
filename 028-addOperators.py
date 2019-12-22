@@ -29,7 +29,7 @@ class Solution:
 
         def backtrack(s, start, j):
             if j != -1 and j > 0 and s[j-1] == '0':
-                return 
+                return
             if j == -1 or (j != -1 and(j >= len(s) - 1 or not s[j+1].isdigit())):
                 if eval(s) == target:
                     res.append(s)
