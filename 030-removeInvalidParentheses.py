@@ -3,14 +3,100 @@
 # 说明: 输入可能包含了除 ( 和 ) 以外的字符。
 s = "()())()"           # ["()()()", "(())()"]
 s = "(a)())()"          # ["(a)()()", "(a())()"]
-s = ")("                # [""]
+# s = ")("                # [""]
+# s = "("
+# s = "(()"
+# s = "a)"
+# s = "x("
+# s = "(((k()(("          # ['k()', '(k)']
+# s = "(r(()()("              # ["r()()","r(())","(r)()","(r())"]
 
 
 class Solution:
     def removeInvalidParentheses(self, s):
-        l_cnt = 0
-        r_cnt = 0
-        return
+        # # 和下面的想法一样,先正着来一遍删掉不对的右括号
+        # # 再把结果反过来,删掉不对的左括号
+        # # 但是这个实现效率很低..
+        # def remove(input, tmp1, tmp2):
+        #     l_cnt = 0
+        #     r_cnt = 0
+        #     lis = ['']
+        #     for ind, ele in enumerate(input):
+        #         if ele == tmp1:
+        #             l_cnt += 1
+        #         elif ele == tmp2:
+        #             r_cnt += 1
+        #         if r_cnt > l_cnt:
+        #             if l_cnt == 0:
+        #                 r_cnt -= 1
+        #                 continue
+        #             # TODO: 去掉一个右括号
+        #             ttmp = []
+        #             for tmp in lis:
+        #                 ind = -1
+        #                 for i in range(l_cnt):
+        #                     ind = tmp.find(tmp2, ind + 1)
+        #                     ttmp.append(tmp[:ind]+tmp[ind+1:])
+        #             lis.extend([i + ele for i in ttmp])
+        #             r_cnt -= 1
+        #             continue
+        #         lis = [i + ele for i in lis]
+        #     return lis
+        #
+        # lis = remove(s, '(', ')')
+        # lis = list(set(lis))
+        # res = []
+        # for ss in lis:
+        #     tmp = remove(ss[::-1], ')', '(')
+        #     res.extend([j[::-1] for j in tmp])
+        # return list(set(res))
+
+        # 利用集合,每次相当于回溯,每次减少一个括号,判断所有可能中有没有符合要求的
+        # 要是有就直接返回结果,没有就继续减少括号找到所有的组合
+        def isvalid(string):  # 判断括号串是否合法
+            l_minus_r = 0
+            for c in string:
+                if c == '(':
+                    l_minus_r += 1
+                elif c == ')':
+                    l_minus_r -= 1
+                    if l_minus_r < 0:
+                        return False
+            return l_minus_r == 0
+
+        level = {s}
+        while True:  # BFS
+            # 返回的是满足 isvalid 函数的level组合
+            valid = list(filter(isvalid, level))
+            if valid:
+                return valid
+            level = {s[:i] + s[i + 1:] for s in level for i in range(len(s)) if s[i] in '()'}
+
+
+        # res = []
+        #
+        # def remove(s, ibegin, jbegin, tmp1, tmp2):
+        #     # print(s, ibegin, jbegin, tmp1, tmp2)
+        #     left_p = 0
+        #     right_p = 0
+        #     for i in range(ibegin, len(s)):
+        #         if s[i] == tmp1: left_p += 1
+        #         if s[i] == tmp2: right_p += 1
+        #         if left_p < right_p:
+        #             for j in range(jbegin, i + 1):
+        #                 if s[j] == tmp2 and (j == jbegin or s[j - 1] != tmp2):
+        #                     remove(s[:j] + s[j + 1:], i, j, tmp1, tmp2)
+        #
+        #             return
+        #     print(s)
+        #     rev = s[::-1]
+        #     if tmp1 == "(":
+        #         remove(rev, 0, 0, ")", "(")
+        #     else:
+        #         res.append(rev)
+        #
+        # remove(s, 0, 0, "(", ")")
+        # return res
 
 
 solve = Solution()
