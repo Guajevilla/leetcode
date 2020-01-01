@@ -27,6 +27,7 @@ class Solution:
         # return backtrack(nums, 0)
 
         '''
+        大区间能分解出独立的小区间，我们可以先算小区间，并组合出大区间。
         i是起始 j是终点 k是宽度
         从2开始，层层迭代
         t是i+1~j-1
