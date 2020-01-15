@@ -228,17 +228,104 @@ import json
 # print(solve.isPowerOfThree(x))
 
 # ############################### 327. 区间和的个数 ################################
-# nums = [-2,5,-1]
-# lower = -2
-# upper = 2           # 3
-#
-#
-# class Solution:
-#     def countRangeSum(self, nums, lower, upper):
-#
-#
-# solve = Solution()
-# print(solve.countRangeSum(nums, lower, upper))
+import bisect
+nums = [-2,5,-1]
+lower = -2
+upper = 2           # 3
+
+
+class Solution:
+    def countRangeSum(self, nums, lower, upper):
+        # # 暴力 超时 O(n^2)
+        # cnt = 0
+        # for i in range(len(nums)):
+        #     tmp = 0
+        #     for j in range(i, len(nums)):
+        #         tmp += nums[j]
+        #         if lower <= tmp <= upper:
+        #             cnt += 1
+        #
+        # return cnt
+
+        p = [0]                             #前缀和初始化，前缀和p[x]，就是区间数组[0, x)的和
+        for i in nums:
+            p += [p[-1] + i]                #前缀和计算
+        ans = 0
+        q = []                              #有序的前缀和队列
+        for pi in p[:: -1]:                 #逆序遍历前缀和
+            i, j = pi + lower, pi + upper   #给出当前前缀和两个对应边界
+            l = bisect.bisect_left(q, i)    #二分查找
+            r = bisect.bisect_right(q, j)   #找到对应边界的在前缀和数组里的插入位置
+            ans += r - l                    #序号大于自己的前缀和里有多少个前缀和在边界里面，就是以当前区间为起点，符合区间和条件的个数
+            bisect.insort(q, pi)            #二分插入更新队列
+        return ans
+
+        # 构造前缀和数组
+        n = len(nums)
+        preSum = [0 for i in range(n + 1)]
+        if nums is None or len(nums) == 0:
+            return 0
+        for i in range(n):
+            preSum[i + 1] = preSum[i] + nums[i]
+        # 前缀和数组中必须有一个前缀0作为辅助位置
+        return self.merge(preSum, lower, upper)
+    '''
+    归并的思想，归并思路大家应该都懂，但是需要注意的是为什么将前缀和数组preSum中的第一个辅助位置初始值0的数不去掉？
+    这是因为有单个值就满足条件的情况
+    比如 [0,0] 0~0
+    这个时候有3个满足条件的区间，前缀数组和是[0,0,0]
+    这样单个值也会和初始值0进行比较
+    '''
+    def merge(self, nums, lower, upper):
+        if len(nums) <= 1:
+            return 0
+        cnt = 0
+        n = len(nums)
+        mid = n // 2
+        left = nums[:mid]
+        right = nums[mid:]
+        cnt += self.merge(left, lower, upper)
+        cnt += self.merge(right, lower, upper)
+        i = 0
+        j = 0
+        low = 0
+        up = 0
+        # 归并过程
+        while i < mid:
+            # 高能，我这里原来把len(right)写成了len(left)，上班时间单点调试了半天。。。一定要小心哦，fuck!
+            while low < len(right) and right[low] - left[i] < lower:
+                low += 1
+            while up < len(right) and right[up] - left[i] <= upper:
+                up += 1
+            cnt += up - low
+            i += 1
+        # 归并排序过程
+        i = 0
+        j = 0
+        k = 0
+        while i < len(left) and j < len(right):
+            # 谁小移动谁
+            if left[i] < right[j]:
+                nums[k] = left[i]
+                i += 1
+            else:
+                nums[k] = right[j]
+                j += 1
+            k += 1
+        # 总有一个要出界
+        while i < len(left):
+            nums[k] = left[i]
+            k += 1
+            i += 1
+        while j < len(right):
+            nums[k] = right[j]
+            k += 1
+            j += 1
+        return cnt
+
+
+solve = Solution()
+print(solve.countRangeSum(nums, lower, upper))
 
 # ############################### 328. 奇偶链表 ################################
 
